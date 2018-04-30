@@ -34,11 +34,13 @@ public class DeviceServiceImp implements DeviceService {
 		return deviceDao.findAll();
 	}
 
+	@Transactional
 	@Override
 	public void save(Device device) {
 		deviceDao.save(device);		
 	}
 
+	@Transactional
 	@Override
 	public void update(Device device) {
 		deviceDao.update(device);	

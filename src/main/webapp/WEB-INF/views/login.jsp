@@ -9,6 +9,7 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Access-Control-Allow-Origin" content="https://stackpath.bootstrapcdn.com">
 <title>Sango</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
@@ -16,14 +17,12 @@
 	crossorigin="anonymous">
 
 <title>Sango</title>
-<link href="/css/signin.css" rel="stylesheet">
+<link href="/css/singin.css" rel="stylesheet">
 </head>
 <body>
 	<div class="container">
-		
-		<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-
 		<form class="form-signin" action='<spring:url value="/loginAction"/>' method="post">
+		<h2 class="form-signin-heading">Please sign in</h2>
 			<table>
 				<tr>
 					<label for="userName" class="sr-only">User Name</label>

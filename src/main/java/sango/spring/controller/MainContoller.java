@@ -25,6 +25,7 @@ public class MainContoller {
 		List<Device> devices = deviceService.findAll();
 		model.addAttribute("devices", devices);
 		model.addAttribute("Device", new Device());
+		log.info("device Count:" + devices.size());
 		return "index";
 	}
 }

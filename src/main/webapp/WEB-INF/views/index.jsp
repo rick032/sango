@@ -8,6 +8,8 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Access-Control-Allow-Origin"
+	content="https://code.jquery.com,https://stackpath.bootstrapcdn.com">
 <title>Sango</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
@@ -24,51 +26,45 @@
 </head>
 <body>
 	<div class="container">
-		<div class="row">
-			<div class="col-md-2">
-				<b>Game Name</b>
-			</div>
-			<div class="col-md-2">
-				<b>User Name</b>
-			</div>
-			<div class="col-md-2">
-				<b>IMEI</b>
-			</div>
-			<div class="col-md-2">
-				<b>Mac Addr</b>
-			</div>
-			<div class="col-md-2">
-				<b>Device Id</b>
-			</div>
-			<div class="col-md-2">
-				<b>Enable</b>
-			</div>
-
-		</div>
-		<c:forEach var="c" items="${devices}">
-			<div class="row">
-				<div class="col-md-2">${c.gamename}</div>
-				<div class="col-md-2">${c.username}</div>
-				<div class="col-md-2">${c.imei}</div>
-				<div class="col-md-2">${c.macAddr}</div>
-				<div class="col-md-2">${c.deviceID}</div>
-				<div class="col-md-2">${c.enabled}</div>
-			</div>
-		</c:forEach>
+		<table class="table" id='deviceTable'>
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Game Name</th>
+					<th scope="col">User Name</th>
+					<th scope="col">IMEI</th>
+					<th scope="col">Mac Addr</th>
+					<th scope="col">Device ID</th>
+					<th scope="col">Enabled</th>
+			</thead>
+			<tbody>
+				<% int i = 1;%>
+				<c:forEach var="c" items="${devices}">
+					<tr>
+						<td scope="row"><%=i++%></td>
+						<td scope="row">${c.gamename}</td>
+						<td scope="row">${c.username}</td>
+						<td scope="row">${c.imei}</td>
+						<td scope="row">${c.macAddr}</td>
+						<td scope="row">${c.deviceID}</td>
+						<td scope="row">${c.enabled}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
 		<br />
 
-
+		<h4>Insert/Modify</h4>
 		<form:form action="/device/add" method="post" id="addForm"
 			modelAttribute="Device">
-			<table align="center">
+			<table align="center" class="table">
 
 				<tr>
 
 					<td><form:label path="username">Username</form:label></td>
 
-					<td><form:input path="username" name="username" id="username" />
-
-					</td>
+					<td><form:input class="form-control" path="username"
+							name="username" id="username" /></td>
 
 				</tr>
 
@@ -76,8 +72,8 @@
 
 					<td><form:label path="gamename">Game Name</form:label></td>
 
-					<td><form:password path="gamename" name="gamename"
-							id="gamename" /></td>
+					<td><form:input class="form-control" path="gamename"
+							name="gamename" id="gamename" /></td>
 
 				</tr>
 
@@ -85,17 +81,8 @@
 
 					<td><form:label path="imei">IMEI</form:label></td>
 
-					<td><form:input path="imei" name="imei" id="imei" /></td>
-
-				</tr>
-
-				<tr>
-
-					<td><form:label path="deviceID">device ID</form:label></td>
-
-					<td><form:input path="deviceID" name="deviceID" id="deviceID" />
-
-					</td>
+					<td><form:input class="form-control" path="imei" name="imei"
+							id="imei" /></td>
 
 				</tr>
 
@@ -103,11 +90,20 @@
 
 					<td><form:label path="macAddr">Mac Addr</form:label></td>
 
-					<td><form:input path="macAddr" name="macAddr" id="macAddr" />
-
-					</td>
+					<td><form:input class="form-control" path="macAddr"
+							name="macAddr" id="macAddr" /></td>
 
 				</tr>
+
+				<tr>
+
+					<td><form:label path="deviceID">device ID</form:label></td>
+
+					<td><form:input class="form-control" path="deviceID"
+							name="deviceID" id="deviceID" /></td>
+
+				</tr>
+
 				<tr>
 
 					<td><form:label path="enabled">enabled</form:label></td>
@@ -122,9 +118,8 @@
 
 					<td></td>
 
-					<td><form:button id="submit" name="submit">submit</form:button>
-
-					</td>
+					<td><form:button class="btn btn-lg btn-primary btn-block"
+							id="submit" name="submit">submit</form:button></td>
 
 				</tr>
 
@@ -147,5 +142,8 @@
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
 		integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
 		crossorigin="anonymous"></script>
+	<script>
+		$("#deviceTable").find(".row")
+	</script>
 </body>
 </html>

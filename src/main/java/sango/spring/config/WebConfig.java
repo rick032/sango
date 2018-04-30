@@ -25,7 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
       //specifying static resource location for themes related files(css etc)
-      registry.addResourceHandler("/WEB-INF/css/**").addResourceLocations("/css/");
-      registry.addResourceHandler("/WEB-INF/js/**").addResourceLocations("/js/");
+      registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
+      registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
   }
 }

@@ -3,6 +3,7 @@
  */
 package sango.spring.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -23,8 +24,9 @@ import sango.spring.model.Device;
  *
  */
 @Repository
-public class DeviceDaoImp implements DeviceDao {
+public class DeviceDaoImp implements DeviceDao, Serializable {
 
+	private static final long serialVersionUID = 1L;
 	@Autowired
 	private SessionFactory sessionFactory;
 
@@ -71,13 +73,12 @@ public class DeviceDaoImp implements DeviceDao {
 
 	@Override
 	public void save(Device device) {
-		getSession().save(device);		
+		getSession().save(device);
 	}
 
 	@Override
 	public void update(Device device) {
-		getSession().update(device);		
+		getSession().update(device);
 	}
 
-	
 }

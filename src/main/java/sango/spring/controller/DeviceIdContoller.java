@@ -1,12 +1,16 @@
 package sango.spring.controller;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import sango.spring.model.Device;
 import sango.spring.service.DeviceService;
@@ -28,36 +32,38 @@ public class DeviceIdContoller {
 		}
 		return device != null && device.isEnabled() ? "Y" : "N";
 	}
-	
-	@RequestMapping(value = "/device/add", method = RequestMethod.POST)
-	@ResponseBody
-	public String add(Device device) {
-		//@RequestParam String imei, @RequestParam String macAddr, @RequestParam String deviceId, @RequestParam String gamename, @RequestParam String username
-		//log.info("IMEI:" + imei + ",macAddr:" + macAddr+ ",deviceId:" + deviceId+ ",username:" + username+ ",gamename:" + gamename);
-		log.info(device.toString());
-		Device device2 = deviceService.findByMacAddr(device.getMacAddr());
-		if (device2 != null) {
-			return "已存在!";			
-		}else {
-			deviceService.save(device); 
-			return "Y";
-		}
-		
-	}
-	
-	@RequestMapping(value = "/device/update", method = RequestMethod.POST)
-	@ResponseBody
-	public String update(Device device) {
-		//@RequestParam String imei, @RequestParam String macAddr, @RequestParam String deviceId, @RequestParam String gamename, @RequestParam String username
-		//log.info("IMEI:" + imei + ",macAddr:" + macAddr+ ",deviceId:" + deviceId+ ",username:" + username+ ",gamename:" + gamename);
+
+	@RequestMapping(value = "/device/add", method = RequestMethod.POST)	
+	public String add(Model model, Device device) {
+		// @RequestParam String imei, @RequestParam String macAddr, @RequestParam String
+		// deviceId, @RequestParam String gamename, @RequestParam String username
+		// log.info("IMEI:" + imei + ",macAddr:" + macAddr+ ",deviceId:" + deviceId+
+		// ",username:" + username+ ",gamename:" + gamename);
 		log.info(device.toString());
 		Device device2 = deviceService.findByMacAddr(device.getMacAddr());
 		if (device2 == null) {
-			return "該MAC不存在!";			
-		}else {
-			deviceService.update(device); 
-			return "Y";
+			deviceService.save(device);
 		}
-		
+
+		List<Device> devices = deviceService.findAll();
+		model.addAttribute("devices", devices);
+		model.addAttribute("Device", new Device());
+		return "index";
+	}
+
+	@RequestMapping(value = "/device/update", method = RequestMethod.POST)	
+	public ModelAndView update(Model model, Device device) {
+		// @RequestParam String imei, @RequestParam String macAddr, @RequestParam String
+		// deviceId, @RequestParam String gamename, @RequestParam String username
+		// log.info("IMEI:" + imei + ",macAddr:" + macAddr+ ",deviceId:" + deviceId+
+		// ",username:" + username+ ",gamename:" + gamename);
+		log.info(device.toString());
+		Device device2 = deviceService.findByMacAddr(device.getMacAddr());
+		if (device2 != null) {
+			deviceService.update(device);
+		} else {
+			// "該MAC不存在!";
+		}
+		return new ModelAndView("index");
 	}
 }
