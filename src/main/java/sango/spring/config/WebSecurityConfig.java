@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -27,9 +27,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/css/**", "/js/**", "/check").permitAll().anyRequest()
-				.hasAnyRole("ADMIN", "USER").and().authorizeRequests().antMatchers("/login**").permitAll().and()
-				.formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll().and().logout()
-				.logoutSuccessUrl("/login").permitAll().and().csrf().disable();
+		// http.authorizeRequests().antMatchers("/css/**", "/js/**",
+		// "/check").permitAll().anyRequest()
+		// .hasAnyRole("ROLE_ADMIN").and().authorizeRequests().antMatchers("/login**").permitAll().and()
+		// .formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll().and().logout()
+		// .logoutSuccessUrl("/login").permitAll().and().csrf().disable();
+		http.authorizeRequests().antMatchers("/css/**", "/js/**", "/check").permitAll().anyRequest().authenticated()
+				.and().formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll()
+				.defaultSuccessUrl("/device").and().logout().logoutSuccessUrl("/login").permitAll().and().csrf()
+				.disable();
+		http.sessionManagement().sessionFixation().migrateSession();
 	}
 }
