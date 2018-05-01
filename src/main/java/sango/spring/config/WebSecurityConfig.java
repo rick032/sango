@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -32,8 +32,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// .hasAnyRole("ROLE_ADMIN").and().authorizeRequests().antMatchers("/login**").permitAll().and()
 		// .formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll().and().logout()
 		// .logoutSuccessUrl("/login").permitAll().and().csrf().disable();
-		http.authorizeRequests().antMatchers("/css/**", "/js/**", "/check").permitAll().anyRequest().authenticated()
-				.and().formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll()
+		http.authorizeRequests().antMatchers("/css/**", "/js/**", "/check", "/device/**").permitAll().anyRequest()
+				.authenticated().and().formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll()
 				.defaultSuccessUrl("/device").and().logout().logoutSuccessUrl("/login").permitAll().and().csrf()
 				.disable();
 		http.sessionManagement().sessionFixation().migrateSession();

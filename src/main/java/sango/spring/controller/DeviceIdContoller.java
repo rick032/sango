@@ -34,8 +34,7 @@ public class DeviceIdContoller {
 		}
 		return device != null && device.isEnabled() ? "Y" : "N";
 	}
-	
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+		
 	@RequestMapping("/device")
 	public String index(Model model, Principal principal) {
 		// model.addAttribute("message", "You are logged in as " + principal.getName());
