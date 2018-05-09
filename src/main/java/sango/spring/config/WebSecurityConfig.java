@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// .formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll().and().logout()
 		// .logoutSuccessUrl("/login").permitAll().and().csrf().disable();
 		http.authorizeRequests().antMatchers("/css/**", "/js/**", "/check", "/device/**").permitAll().anyRequest()
-				.authenticated().and().formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll()
+				.hasAnyRole("ADMIN").and().formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll()
 				.defaultSuccessUrl("/device").and().logout().logoutSuccessUrl("/login").permitAll().and().csrf()
 				.disable();
 		http.sessionManagement().sessionFixation().migrateSession();
