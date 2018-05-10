@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
@@ -59,7 +58,7 @@ public class DeviceIdContoller {
 		return "device";
 	}
 
-	private final String INSERT_DEVICE = "insert into DEVICE(MACADDR,IMEI,deviceId,gameName,userName,enabled) values('''{0}''','''{1}''','''{2}''','''{3}''','''{4}''',{5});";
+	private String INSERT_DEVICE = "insert into DEVICE(MACADDR,IMEI,deviceId,gameName,userName,enabled) values('''{0}''','''{1}''','''{2}''','''{3}''','''{4}''',{5});";
 
 	@RequestMapping(value = "/device/add", method = RequestMethod.POST)
 	public String add(Model model, Device device) {
@@ -77,7 +76,7 @@ public class DeviceIdContoller {
 		model.addAttribute("devices", devices);
 		model.addAttribute("Device", new Device());
 
-		String insertSQL = MessageFormat.format(INSERT_DEVICE, new String[] { device.getMacAddr(), device.getImei(),
+		String insertSQL = MessageFormat.format(INSERT_DEVICE, new Object[] { device.getMacAddr(), device.getImei(),
 				device.getDeviceID(), device.getGamename(), device.getUsername(), String.valueOf(device.isEnabled()) });
 		log.info("@@@INSERT SQL:" + insertSQL);
 		try {
@@ -85,7 +84,7 @@ public class DeviceIdContoller {
 		} catch (IOException e) {
 			log.error("Write to GS fail", e.getCause());
 		}
-		return "index";
+		return "device";
 	}
 
 	/**
@@ -133,7 +132,7 @@ public class DeviceIdContoller {
 	}
 
 	@RequestMapping(value = "/device/update", method = RequestMethod.POST)
-	public ModelAndView update(Model model, Device device) {
+	public String update(Model model, Device device) {
 		// @RequestParam String imei, @RequestParam String macAddr, @RequestParam String
 		// deviceId, @RequestParam String gamename, @RequestParam String username
 		// log.info("IMEI:" + imei + ",macAddr:" + macAddr+ ",deviceId:" + deviceId+
@@ -145,6 +144,9 @@ public class DeviceIdContoller {
 		} else {
 			// "該MAC不存在!";
 		}
-		return new ModelAndView("index");
+		List<Device> devices = deviceService.findAll();
+		model.addAttribute("devices", devices);
+		model.addAttribute("Device", new Device());
+		return "device";
 	}
 }

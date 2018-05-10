@@ -16,6 +16,37 @@
 	integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
 	crossorigin="anonymous">
 <style type="text/css">
+<!--
+grid.css -->body {
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+}
+
+h3 {
+	margin-top: 2rem;
+}
+
+.row {
+	margin-bottom: 1rem;
+}
+
+.row .row {
+	margin-top: 1rem;
+	margin-bottom: 0;
+}
+
+[class*="col-"] {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	background-color: rgba(86, 61, 124, .15);
+	border: 1px solid rgba(86, 61, 124, .2);
+}
+
+hr {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
 .selector-for-some-widget {
 	box-sizing: content-box;
 }
@@ -38,10 +69,12 @@
 					<th scope="col">Enabled</th>
 			</thead>
 			<tbody>
-				<% int i = 1;%>
+				<%
+					int i = 1;
+				%>
 				<c:forEach var="c" items="${devices}">
 					<tr>
-						<td scope="row"><%=i++%></td>
+						<td scope="row"><span name='no'><%=i++%></span></td>
 						<td scope="row">${c.gamename}</td>
 						<td scope="row">${c.username}</td>
 						<td scope="row">${c.imei}</td>
@@ -61,6 +94,15 @@
 
 				<tr>
 
+					<td><form:label path="gamename">Game Name</form:label></td>
+
+					<td><form:input class="form-control" path="gamename"
+							name="gamename" id="gamename" /></td>
+
+				</tr>
+
+				<tr>
+
 					<td><form:label path="username">Username</form:label></td>
 
 					<td><form:input class="form-control" path="username"
@@ -68,14 +110,7 @@
 
 				</tr>
 
-				<tr>
 
-					<td><form:label path="gamename">Game Name</form:label></td>
-
-					<td><form:input class="form-control" path="gamename"
-							name="gamename" id="gamename" /></td>
-
-				</tr>
 
 				<tr>
 
@@ -118,8 +153,9 @@
 
 					<td></td>
 
-					<td><form:button class="btn btn-lg btn-primary btn-block"
-							id="submit" name="submit">submit</form:button></td>
+					<td><form:button class="btn btn-md btn-primary btn-block"
+							id="insert" name="insert">Insert</form:button> <form:button
+							class="btn btn-md btn-info btn-block" id="update" name="update">Update</form:button></td>
 
 				</tr>
 
@@ -143,7 +179,37 @@
 		integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
 		crossorigin="anonymous"></script>
 	<script>
-		$("#deviceTable").find(".row")
+		var form = $("#addForm");
+		$("#deviceTable").find("span[name=no]").click(function() {
+			$(this).parent().siblings().each(function(index) {				
+				switch (index) {
+				case 0:
+					$("#gamename").val($(this).text());
+					break;
+				case 1:
+					$("#username").val($(this).text());
+					break;
+				case 2:
+					$("#imei").val($(this).text());
+					break;
+				case 3:
+					$("#macAddr").val($(this).text());
+					break;
+				case 4:
+					$("#deviceID").val($(this).text());
+					break;
+				case 5:
+					$('#enabled').prop('checked', "true" == $(this).text());
+					break;
+				}
+			});
+		});
+		$("#insert").click(function(){
+			form.prop('action','/device/add');
+		});
+		$("#update").click(function(){
+			form.prop('action','/device/update');
+		});
 	</script>
 </body>
 </html>
