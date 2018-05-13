@@ -3,6 +3,7 @@
  */
 package sango.spring.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import sango.spring.model.Device;
@@ -22,5 +23,7 @@ public interface DeviceDao {
 	void save(Device device);
 
 	void update(Device device);
+	
+	Device findByMacAddrCheckTime(String macAddr, Timestamp checkTime);
 
 }

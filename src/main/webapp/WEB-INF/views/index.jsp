@@ -36,6 +36,7 @@
 					<th scope="col">Mac Addr</th>
 					<th scope="col">Device ID</th>
 					<th scope="col">Enabled</th>
+					<th scope="col">CheckTime</th>
 			</thead>
 			<tbody>
 				<% int i = 1;%>

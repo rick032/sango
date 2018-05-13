@@ -1,5 +1,6 @@
 package sango.spring.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,12 @@ public class DeviceServiceImp implements DeviceService {
 	@Override
 	public void update(Device device) {
 		deviceDao.update(device);	
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Device findByMacAddrCheckTime(String macAddr, Timestamp checkTime) {
+		return deviceDao.findByMacAddrCheckTime(macAddr,checkTime);
 	}
 
 }

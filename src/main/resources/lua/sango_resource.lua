@@ -32,10 +32,17 @@ file:write(",MacAddr:" .. getMacAddr())
 file:write(",SIMSerial:" .. getSIMSerial())
 file:write(",Device Id:" .. getDeviceID() .. "\n")
 --params = { imei = getIMEI(), macAddr = getMacAddr(), device = getDeviceID() }
-varResult = httpGet("https://weighty-site-140903.appspot.com/check?imei=" .. getIMEI() .. "&macAddr=" .. getMacAddr() .. "&deviceId=" .. getDeviceID())
+varResult = httpGet("https://weighty-site-140903.appspot.com/check?macAddr=" .. getMacAddr().."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
+--varResult = httpGet("http://localhost:8080/check?macAddr=" .. getMacAddr().."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
 toast("認證:" .. varResult)
 if varResult == "N" then
     scriptExit("非認證過的機器 macAddr=" .. getMacAddr() .. " deviceId=" .. getDeviceID() .. " IMEI=" .. getIMEI())
+elseif varResult == "1" then
+    scriptExit("啟動時間未到 macAddr=" .. getMacAddr() )
+elseif varResult == "2" then
+    scriptExit("認證已過期 macAddr=" .. getMacAddr() )
+elseif varResult == "3" then
+    scriptExit("認證未啟用 macAddr=" .. getMacAddr() )
 end
 
 local deviceId = { "農田", "伐木", "採石", "治煉" }
@@ -194,10 +201,11 @@ function loopAttack(teamNum, pointA, pointB)
         local resource
         --dialogReg:highlight(4)
         --print(resourceActions[teamNum] )
-        local resourceSimilar = 0.93
+        local resourceSimilar = 0.94
         if resourceActions[teamNum] == 1 then
             resource = Pattern("goToFarmland.png"):similar(resourceSimilar)
         elseif resourceActions[teamNum] == 2 then
+            --相似度0.95
             resource = Pattern("goToWood.png"):similar(resourceSimilar)
         elseif resourceActions[teamNum] == 3 then
             resource = Pattern("goToStone.png"):similar(resourceSimilar)
@@ -205,12 +213,14 @@ function loopAttack(teamNum, pointA, pointB)
             resource = Pattern("goToIron.png"):similar(resourceSimilar)
         end
         --print(resource)
+        --dialogReg:highlight(2)
         local goToResource = dialogReg:exists(resource)
         if goToResource == nil then
             swipe(Location(370, 300), Location(370, 100))
             goToResource = dialogReg:exists(resource)
         end
         if goToResource ~= nil then
+            toast("similar:"..goToResource:getScore())
             --goToResource = dialogReg:find(resource)
             goToResource:highlight(3)
             --print(goToResource)
@@ -536,7 +546,7 @@ function dialog()
     addCheckBox("autoRecruit", "自動招募及治療", true)
     --自動使用行軍令
     addCheckBox("autoUse", "自動使用行軍令", true)
-    dialogShow("請輸入以下資訊後點選OK。ver:20180510")
+    dialogShow("請輸入以下資訊後點選OK。ver:20180512")
     --等待秒數
     addTextView("等待秒數")
     addEditText("inputWaitSec", "10")

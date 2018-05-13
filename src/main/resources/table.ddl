@@ -16,5 +16,16 @@ create table DEVICE(
 	deviceId varchar(32) not null,
 	gameName varchar(120) not null,
 	userName varchar(120) not null,
-	enabled boolean not null
+	enabled boolean not null,
+	startTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+	endTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+	lastCheckTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+);
+
+
+create table DEVICELOG(	
+	id char(32) not null primary key,	
+	CHECKTIME varchar(120) not null,
+	CHECKRESULT char(1) ,
+	DEVICE_MAC varchar(17) not null FOREIGN KEY (MACADDR) REFERENCES DEVICE(MACADDR)	
 );

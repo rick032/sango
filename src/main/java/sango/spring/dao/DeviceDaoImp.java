@@ -4,6 +4,7 @@
 package sango.spring.dao;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -79,6 +80,24 @@ public class DeviceDaoImp implements DeviceDao, Serializable {
 	@Override
 	public void update(Device device) {
 		getSession().update(device);
+	}
+
+	@Override
+	public Device findByMacAddrCheckTime(String macAddr, Timestamp checkTime) {
+		CriteriaBuilder builder = getSession().getCriteriaBuilder();
+		CriteriaQuery<Device> criteria = builder.createQuery(Device.class);
+		Root<Device> root = criteria.from(Device.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get("macAddr"), macAddr));
+		criteria.where(builder.greaterThan(root.get("startTime"), checkTime));
+		criteria.where(builder.lessThan(root.get("endTime"), checkTime));
+		Device device = null;
+		try {
+			device = getSession().createQuery(criteria).getSingleResult();
+		} catch (NoResultException nre) {
+			// 找不到
+		}
+		return device;
 	}
 
 }

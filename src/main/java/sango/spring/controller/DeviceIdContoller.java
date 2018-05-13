@@ -7,18 +7,26 @@ import java.io.OutputStream;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.appengine.api.utils.SystemProperty;
+import com.google.appengine.api.utils.SystemProperty.Environment.Value;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
@@ -27,6 +35,8 @@ import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
 
 import sango.spring.model.Device;
+import sango.spring.model.DeviceLog;
+import sango.spring.service.DeviceLogService;
 import sango.spring.service.DeviceService;
 
 @Controller
@@ -36,32 +46,62 @@ public class DeviceIdContoller {
 	@Autowired
 	DeviceService deviceService;
 
+	@Autowired
+	DeviceLogService deviceLogService;
+
+	final String 驗證成功 = "Y";
+	final String 認證不存在 = "N";
+	final String 啟動時間未到 = "1";
+	final String 認證已過期 = "2";
+	final String 認證未啟用 = "3";
+
 	@RequestMapping(value = "/check", method = RequestMethod.GET)
 	@ResponseBody
 	public String check(@RequestParam String imei, @RequestParam String macAddr, @RequestParam String deviceId) {
 		log.info("IMEI:" + imei + "macAddr:" + macAddr);
+
 		Device device = deviceService.findByMacAddr(macAddr);
+		String result = 驗證成功;
 		if (device != null) {
+			Timestamp nowTime = new Timestamp(System.currentTimeMillis());// Utils.getTWTimestamp();
 			log.info(device.toString());
+			if (nowTime.before(device.getStartTime())) {
+				result = 啟動時間未到;
+			} else if (nowTime.after(device.getEndTime())) {
+				result = 認證已過期;
+			} else if (!device.isEnabled()) {
+				result = 認證未啟用;
+			}
+		} else {
+			result = 認證不存在;
 		}
-		return device != null && device.isEnabled() ? "Y" : "N";
+		deviceLogService.save(new DeviceLog(device, result));
+		return result;
 	}
 
 	@RequestMapping("/device")
-	public String index(Model model, Principal principal) {
+	public String index(Model model, Principal principal, HttpServletRequest request) {
 		// model.addAttribute("message", "You are logged in as " + principal.getName());
 		// return "index";
 		List<Device> devices = deviceService.findAll();
+		Object macAddr = request.getParameter("macAddr");
+		List<DeviceLog> deviceLogs = new ArrayList<DeviceLog>();
+		if (!StringUtils.isEmpty(macAddr)) {
+			deviceLogs = deviceLogService.findByMacAddr((String) macAddr);
+		}
+		model.addAttribute("deviceLogs", deviceLogs);
 		model.addAttribute("devices", devices);
 		model.addAttribute("Device", new Device());
 		log.info("device Count:" + devices.size());
 		return "device";
 	}
 
-	private String INSERT_DEVICE = "insert into DEVICE(MACADDR,IMEI,deviceId,gameName,userName,enabled) values('''{0}''','''{1}''','''{2}''','''{3}''','''{4}''',{5});";
+	private String INSERT_DEVICE = "insert into DEVICE(MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(''{0}'',''{1}'',''{2}'',''{3}'',''{4}'',{5},CURRENT_TIMESTAMP,''{6}'');";
 
+	// for
+	// test:http://localhost:8080/check?macAddr=08:00:27:72:E8:A1&imei=359090150142188&deviceId=14dae9e9352e2959
 	@RequestMapping(value = "/device/add", method = RequestMethod.POST)
-	public String add(Model model, Device device) {
+	public String add(Model model, Device device, HttpServletRequest request) {
 		// @RequestParam String imei, @RequestParam String macAddr, @RequestParam String
 		// deviceId, @RequestParam String gamename, @RequestParam String username
 		// log.info("IMEI:" + imei + ",macAddr:" + macAddr+ ",deviceId:" + deviceId+
@@ -70,21 +110,27 @@ public class DeviceIdContoller {
 		Device device2 = deviceService.findByMacAddr(device.getMacAddr());
 		if (device2 == null) {
 			deviceService.save(device);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.sss");
+			String insertSQL = MessageFormat.format(INSERT_DEVICE,
+					new Object[] { device.getMacAddr(), device.getImei(), device.getDeviceID(), device.getGamename(),
+							device.getUsername(), String.valueOf(device.isEnabled()),
+							sdf.format(device.getEndTime()) });
+			log.info("@@@INSERT SQL:" + insertSQL);
+			try {
+
+				Value location = SystemProperty.environment.value();
+				if (location == SystemProperty.Environment.Value.Production) {
+					writeToGS(insertSQL);
+				} else if (location == SystemProperty.Environment.Value.Development) {
+
+				}
+
+			} catch (IOException e) {
+				log.error("Write to GS fail", e.getCause());
+			}
 		}
 
-		List<Device> devices = deviceService.findAll();
-		model.addAttribute("devices", devices);
-		model.addAttribute("Device", new Device());
-
-		String insertSQL = MessageFormat.format(INSERT_DEVICE, new Object[] { device.getMacAddr(), device.getImei(),
-				device.getDeviceID(), device.getGamename(), device.getUsername(), String.valueOf(device.isEnabled()) });
-		log.info("@@@INSERT SQL:" + insertSQL);
-		try {
-			writeToGS(insertSQL);
-		} catch (IOException e) {
-			log.error("Write to GS fail", e.getCause());
-		}
-		return "device";
+		return index(model, null, request);
 	}
 
 	/**
@@ -132,7 +178,7 @@ public class DeviceIdContoller {
 	}
 
 	@RequestMapping(value = "/device/update", method = RequestMethod.POST)
-	public String update(Model model, Device device) {
+	public String update(Model model, Device device, HttpServletRequest request) {
 		// @RequestParam String imei, @RequestParam String macAddr, @RequestParam String
 		// deviceId, @RequestParam String gamename, @RequestParam String username
 		// log.info("IMEI:" + imei + ",macAddr:" + macAddr+ ",deviceId:" + deviceId+
@@ -144,9 +190,6 @@ public class DeviceIdContoller {
 		} else {
 			// "該MAC不存在!";
 		}
-		List<Device> devices = deviceService.findAll();
-		model.addAttribute("devices", devices);
-		model.addAttribute("Device", new Device());
-		return "device";
+		return index(model, null, request);
 	}
 }
