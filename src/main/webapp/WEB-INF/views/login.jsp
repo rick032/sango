@@ -20,7 +20,7 @@
 <link href="/css/singin.css" rel="stylesheet">
 </head>
 <body>
-	<div class="container">
+	<div class="container">		
 		<form class="form-signin" action='<spring:url value="/loginAction"/>' method="post">
 		<h2 class="form-signin-heading">Please sign in</h2>
 			<table>

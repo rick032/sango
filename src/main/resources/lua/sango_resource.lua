@@ -201,13 +201,14 @@ function loopAttack(teamNum, pointA, pointB)
         local resource
         --dialogReg:highlight(4)
         --print(resourceActions[teamNum] )
-        local resourceSimilar = 0.94
+        local resourceSimilar = 0.97
         if resourceActions[teamNum] == 1 then
             resource = Pattern("goToFarmland.png"):similar(resourceSimilar)
         elseif resourceActions[teamNum] == 2 then
             --相似度0.95
             resource = Pattern("goToWood.png"):similar(resourceSimilar)
         elseif resourceActions[teamNum] == 3 then
+            --因伐木場的相似度是0.966
             resource = Pattern("goToStone.png"):similar(resourceSimilar)
         elseif resourceActions[teamNum] == 4 then
             resource = Pattern("goToIron.png"):similar(resourceSimilar)
@@ -422,17 +423,22 @@ function checkBeAttacked()
                 --主城被打
                 local matchDiv = find(Pattern("freeBattleDiv.png"):similar(0.7))
                 local freeBattleDivReg = Region(matchDiv:getX(), matchDiv:getY(), matchDiv:getW(), matchDiv:getH())
-                if freeBattleDivReg:exists("use.png") then
-                    click(freeBattleDivReg:find("use.png"))
-                    print("使用免戰")
-                    file:write("使用免戰\n")
-                    --aa = freeBattleDivReg:find("use.png")
-                    --aa:highlight(4)
-                elseif freeBattleDivReg:exists("buyUse.png") then
-                    click(freeBattleDivReg:find("buyUse.png"))
-                    if existsClick("sure.png") then
-                        print("購買免戰並使用")
-                        file:write("購買免戰並使用\n")
+                if freeBattleDivReg:exists("executedfreeBattle.png") then
+                    print("免戰已存在")
+                    file:write("免戰已存在\n")
+                else
+                    if freeBattleDivReg:exists("use.png") then
+                        click(freeBattleDivReg:find("use.png"))
+                        print("使用免戰")
+                        file:write("使用免戰\n")
+                        --aa = freeBattleDivReg:find("use.png")
+                        --aa:highlight(4)
+                    elseif freeBattleDivReg:exists("buyUse.png") then
+                        click(freeBattleDivReg:find("buyUse.png"))
+                        if existsClick("sure.png") then
+                            print("購買免戰並使用")
+                            file:write("購買免戰並使用\n")
+                        end
                     end
                 end
             end
@@ -461,9 +467,9 @@ function checkBeAttacked()
             end
         else
             --跨服被打
-            print("跨服被攻擊!!")
-            toast("跨服被攻擊!!")
-            file:write("跨服被攻擊!!\n")
+            print("跨服被攻擊/已被攻擊完!!")
+            toast("跨服被攻擊/已被攻擊完!!")
+            file:write("跨服被攻擊/已被攻擊完!!\n")
             existsClick("close.png")
         end
     end
@@ -495,13 +501,14 @@ function dialog()
     --removePreference("cbValue")
     actions = { "採集", "打怪", "不動作" }
     resourceActions = { "農田", "伐木", "採石", "治煉" }
+    directions = {"東","西","北","南","東北","西南","西北","東南"}
 
     dialogInit()
     --設定總隊數
     addTextView("目前的總隊數ex:4")
     addEditText("keyingTeams", "4")
-    addCheckBox("onlyHorseThief", "只打馬賊", false)
-    addEditText("keyinSolderNum", "30000")
+    --addCheckBox("onlyHorseThief", "只打馬賊", false)
+    addEditText("keyinSolderNum", "50000")
     addTextView("兵力少於多少不打怪")
     newRow()
     addCheckBox("autoResourceLevel", "設定採集等級", false)
@@ -546,7 +553,7 @@ function dialog()
     addCheckBox("autoRecruit", "自動招募及治療", true)
     --自動使用行軍令
     addCheckBox("autoUse", "自動使用行軍令", true)
-    dialogShow("請輸入以下資訊後點選OK。ver:20180512")
+    dialogShow("請輸入以下資訊後點選OK。ver:20180524")
     --等待秒數
     addTextView("等待秒數")
     addEditText("inputWaitSec", "10")
@@ -662,7 +669,7 @@ while (true) do
                                     click(aviTeam)
                                     local solderReg = Region(313, 100, 68, 20):highlight(3)
                                     local solderNum = numberOCR(solderReg, "wi")
-                                    --toast("keyinSolderNum:"..keyinSolderNum)
+                                    toast("keyinSolderNum:"..keyinSolderNum .." Solders:"..solderNum)
                                     if tonumber(solderNum) < keyinSolderNum then
                                         toast("兵力太少:" .. solderNum)
                                         existsClick("close.png")

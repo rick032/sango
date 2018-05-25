@@ -68,7 +68,7 @@ public class DeviceDaoImp implements DeviceDao, Serializable {
 		CriteriaQuery<Device> criteria = builder.createQuery(Device.class);
 		Root<Device> root = criteria.from(Device.class);
 		criteria.select(root);
-
+		criteria.orderBy(builder.desc(root.get("lastCheckTime")));
 		return getSession().createQuery(criteria).getResultList();
 	}
 
@@ -91,6 +91,7 @@ public class DeviceDaoImp implements DeviceDao, Serializable {
 		criteria.where(builder.equal(root.get("macAddr"), macAddr));
 		criteria.where(builder.greaterThan(root.get("startTime"), checkTime));
 		criteria.where(builder.lessThan(root.get("endTime"), checkTime));
+		criteria.orderBy(builder.desc(root.get("lastCheckTime")));
 		Device device = null;
 		try {
 			device = getSession().createQuery(criteria).getSingleResult();

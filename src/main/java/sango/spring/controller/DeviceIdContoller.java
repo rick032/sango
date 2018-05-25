@@ -72,10 +72,10 @@ public class DeviceIdContoller {
 			} else if (!device.isEnabled()) {
 				result = 認證未啟用;
 			}
+			deviceLogService.save(new DeviceLog(device, result));
 		} else {
-			result = 認證不存在;
-		}
-		deviceLogService.save(new DeviceLog(device, result));
+			result = 認證不存在;			
+		}		
 		return result;
 	}
 
