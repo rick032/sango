@@ -146,7 +146,8 @@ hr {
 				<tr>
 					<td><form:label path="macAddr">Mac Addr</form:label></td>
 					<td><form:input class="form-control" path="macAddr"
-							name="macAddr" id="macAddr" /></td>
+							name="macAddr" id="macAddr" /><input type="hidden"
+							name="OmacAddr" id="OmacAddr" /></td>
 				</tr>
 				<tr>
 					<td><form:label path="deviceID">device ID</form:label></td>
@@ -201,7 +202,7 @@ hr {
 					$("#imei").val($(this).text());
 					break;
 				case 3:
-					$("#macAddr").val($(this).text());
+					$("#macAddr,#OmacAddr").val($(this).text());					
 					break;
 				case 4:
 					$("#deviceID").val($(this).text());
@@ -215,14 +216,10 @@ hr {
 				}
 			});
 		}).end().find("span[name=deviceMac]").click(function() {
+			var url = document.location.href.substr(0,document.location.href.indexOf('device') + 6) + "?macAddr=" + $(this).text();
 			
-		var index = document.location.href.indexOf("macAddr=");
-					var url = index > 0 ? document.location.href.substr(0,
-							index + 8)
-							+ $(this).text() : document.location.href
-							+ "?macAddr=" + $(this).text();
-					document.location = url;
-				});
+			document.location = url;
+		});
 		$("#insert").click(function() {
 			form.prop('action', '/device/add');
 		});

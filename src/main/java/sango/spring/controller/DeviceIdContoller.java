@@ -74,8 +74,8 @@ public class DeviceIdContoller {
 			}
 			deviceLogService.save(new DeviceLog(device, result));
 		} else {
-			result = 認證不存在;			
-		}		
+			result = 認證不存在;
+		}
 		return result;
 	}
 
@@ -109,6 +109,7 @@ public class DeviceIdContoller {
 		log.info(device.toString());
 		Device device2 = deviceService.findByMacAddr(device.getMacAddr());
 		if (device2 == null) {
+			device.setStartTime(new Timestamp(System.currentTimeMillis()));
 			deviceService.save(device);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.sss");
 			String insertSQL = MessageFormat.format(INSERT_DEVICE,
@@ -184,9 +185,16 @@ public class DeviceIdContoller {
 		// log.info("IMEI:" + imei + ",macAddr:" + macAddr+ ",deviceId:" + deviceId+
 		// ",username:" + username+ ",gamename:" + gamename);
 		log.info(device.toString());
-		Device device2 = deviceService.findByMacAddr(device.getMacAddr());
+		String OmacAddr = request.getParameter("OmacAddr");
+		Device device2 = deviceService.findByMacAddr(OmacAddr);
 		if (device2 != null) {
-			deviceService.update(device);
+			if (device2.getMacAddr().equals(device.getMacAddr())) {
+				deviceService.update(device);
+			} else {
+				device2.setMacAddr(device.getMacAddr());
+				deviceService.update(device2);
+			}
+
 		} else {
 			// "該MAC不存在!";
 		}
