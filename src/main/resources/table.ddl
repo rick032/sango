@@ -11,7 +11,8 @@ create table authorities (
 create unique index ix_auth_username on authorities (username,authority);
 
 create table DEVICE(
-	MACADDR varchar(17) not null primary key,
+	oid varchar(32) not null primary key,
+	MACADDR varchar(17) not null,
 	IMEI varchar(32) not null,
 	deviceId varchar(32) not null,
 	gameName varchar(120) not null,

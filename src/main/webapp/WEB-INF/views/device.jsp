@@ -61,6 +61,7 @@ hr {
 			<thead>
 				<tr>
 					<th scope="col">#</th>
+					<th scope="col">oid</th>
 					<th scope="col">Game Name</th>
 					<th scope="col">User Name</th>
 					<th scope="col">IMEI</th>
@@ -77,6 +78,7 @@ hr {
 				<c:forEach var="c" items="${devices}">
 					<tr>
 						<td scope="row"><span name='no'><%=i++%></span></td>
+						<td scope="row">${c.oid}</td>
 						<td scope="row">${c.gamename}</td>
 						<td scope="row">${c.username}</td>
 						<td scope="row">${c.imei}</td>
@@ -120,7 +122,14 @@ hr {
 		<form:form action="/device/add" method="post" id="addForm"
 			modelAttribute="Device">
 			<table align="center" class="table">
+				<tr>
 
+					<td><form:label path="oid">oid</form:label></td>
+
+					<td><form:input class="form-control" path="oid"
+							name="oid" id="oid" readOnly="readOnly"/></td>
+
+				</tr>
 				<tr>
 
 					<td><form:label path="gamename">Game Name</form:label></td>
@@ -193,24 +202,27 @@ hr {
 			$(this).parent().siblings().each(function(index) {
 				switch (index) {
 				case 0:
-					$("#gamename").val($(this).text());
+					$("#oid").val($(this).text());
 					break;
 				case 1:
-					$("#username").val($(this).text());
+					$("#gamename").val($(this).text());
 					break;
 				case 2:
-					$("#imei").val($(this).text());
+					$("#username").val($(this).text());
 					break;
 				case 3:
-					$("#macAddr,#OmacAddr").val($(this).text());					
+					$("#imei").val($(this).text());
 					break;
 				case 4:
-					$("#deviceID").val($(this).text());
+					$("#macAddr").val($(this).text());					
 					break;
 				case 5:
-					$('#endTime').val($(this).text());
+					$("#deviceID").val($(this).text());
 					break;
 				case 6:
+					$('#endTime').val($(this).text());
+					break;
+				case 7:
 					$('#enabled').prop('checked', "true" == $(this).text());
 					break;
 				}

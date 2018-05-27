@@ -14,8 +14,6 @@ import sango.spring.model.Device;
  */
 public interface DeviceDao {
 
-	Device findById(String deviceId);
-
 	Device findByMacAddr(String macAddr);
 
 	List<Device> findAll();
@@ -25,5 +23,7 @@ public interface DeviceDao {
 	void update(Device device);
 	
 	Device findByMacAddrCheckTime(String macAddr, Timestamp checkTime);
+
+	Device findByOid(String oid);
 
 }

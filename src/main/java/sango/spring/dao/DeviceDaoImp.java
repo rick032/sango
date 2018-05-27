@@ -6,6 +6,7 @@ package sango.spring.dao;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -40,13 +41,7 @@ public class DeviceDaoImp implements DeviceDao, Serializable {
 		}
 		return session;
 	}
-
-	@Override
-	public Device findById(String deviceId) {
-		return getSession().get(Device.class, deviceId);
-	}
-
-	@Override
+	
 	public Device findByMacAddr(String macAddr) {
 		CriteriaBuilder builder = getSession().getCriteriaBuilder();
 		CriteriaQuery<Device> criteria = builder.createQuery(Device.class);
@@ -99,6 +94,11 @@ public class DeviceDaoImp implements DeviceDao, Serializable {
 			// 找不到
 		}
 		return device;
+	}
+
+	@Override
+	public Device findByOid(String oid) {
+		return getSession().get(Device.class, UUID.fromString(oid));
 	}
 
 }

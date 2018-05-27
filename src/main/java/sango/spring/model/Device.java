@@ -3,24 +3,32 @@ package sango.spring.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
-@Table(name = "DEVICE", uniqueConstraints = @UniqueConstraint(columnNames = "MACADDR"))
+@Table(name = "DEVICE", uniqueConstraints = @UniqueConstraint(columnNames = "oid"))
 public class Device implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	@Id
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Column(name = "oid", updatable = false, nullable = false)
+	private UUID oid;
+
 	@Column(name = "MACADDR")
 	private String macAddr;
 
@@ -50,6 +58,14 @@ public class Device implements Serializable {
 
 	@OneToMany(mappedBy = "device")
 	private Set<DeviceLog> deviceLogs;
+
+	public UUID getOid() {
+		return oid;
+	}
+
+	public void setOid(UUID oid) {
+		this.oid = oid;
+	}
 
 	public String getDeviceID() {
 		return deviceID;

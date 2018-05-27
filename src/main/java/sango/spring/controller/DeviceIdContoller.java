@@ -185,15 +185,17 @@ public class DeviceIdContoller {
 		// log.info("IMEI:" + imei + ",macAddr:" + macAddr+ ",deviceId:" + deviceId+
 		// ",username:" + username+ ",gamename:" + gamename);
 		log.info(device.toString());
-		String OmacAddr = request.getParameter("OmacAddr");
-		Device device2 = deviceService.findByMacAddr(OmacAddr);
+		String oid = request.getParameter("oid");
+		Device device2 = deviceService.findByOid(oid);
 		if (device2 != null) {
-			if (device2.getMacAddr().equals(device.getMacAddr())) {
-				deviceService.update(device);
-			} else {
-				device2.setMacAddr(device.getMacAddr());
-				deviceService.update(device2);
-			}
+			device2.setDeviceID(device.getDeviceID());
+			device2.setEnabled(device.isEnabled());
+			device2.setEndTime(device.getEndTime());
+			device2.setGamename(device.getGamename());
+			device2.setImei(device.getImei());
+			device2.setUsername(device.getUsername());
+			device2.setMacAddr(device.getMacAddr());
+			deviceService.update(device2);
 
 		} else {
 			// "該MAC不存在!";

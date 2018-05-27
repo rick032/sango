@@ -53,4 +53,11 @@ public class DeviceServiceImp implements DeviceService {
 		return deviceDao.findByMacAddrCheckTime(macAddr,checkTime);
 	}
 
+	@Transactional(readOnly = true)
+	@Override
+	public Device findByOid(String oid) {
+
+		return deviceDao.findByOid(oid);
+	}
+
 }

@@ -8,6 +8,8 @@ import sango.spring.model.Device;
 public interface DeviceService {
 
 	Device findByMacAddr(String macAddr);
+	
+	Device findByOid(String oid);
 
 	Device findByMacAddrCheckTime(String macAddr,Timestamp checkTime);
 	
