@@ -1,4 +1,5 @@
 -- ========== Settings ================
+thisVersion=20180602
 Settings:setCompareDimension(true, 1280)
 Settings:setScriptDimension(true, 720)
 Settings:set("MinSimilarity", 0.9)
@@ -18,6 +19,7 @@ centerLocation = Location(340, 179)
 hitBanditCount = 0
 collectionCount = 0
 teamActions = {}
+teamDirections = {}
 resourceActions = {}
 dir = scriptPath()
 setImagePath(dir .. "image")
@@ -32,7 +34,7 @@ file:write(",MacAddr:" .. getMacAddr())
 file:write(",SIMSerial:" .. getSIMSerial())
 file:write(",Device Id:" .. getDeviceID() .. "\n")
 --params = { imei = getIMEI(), macAddr = getMacAddr(), device = getDeviceID() }
-varResult = httpGet("https://weighty-site-140903.appspot.com/check?macAddr=" .. getMacAddr().."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
+varResult = httpGet("https://weighty-site-140903.appspot.com/check?macAddr=" .. getMacAddr().."&version=" ..thisVersion .."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
 --varResult = httpGet("http://localhost:8080/check?macAddr=" .. getMacAddr().."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
 toast("認證:" .. varResult)
 if varResult == "N" then
@@ -381,8 +383,13 @@ function findBattle(teamNum)
     end
 
     toast("開始尋找" .. BanditLevel)
-
-    while (direction < 9) do
+    local count = 1
+    -- 起始方向
+    direction = teamDirections[teamNum]
+    while (count < 9) do
+        if direction > 9 then
+            direction = 1
+        end
         if direction < 3 then
             result = loopAttack(teamNum, west, east)
         elseif direction < 5 then
@@ -397,6 +404,7 @@ function findBattle(teamNum)
         else
             return result
         end
+        count = count + 1
     end
     --can't find the Bandit
     return 4
@@ -476,7 +484,7 @@ function checkBeAttacked()
 end
 
 --檢查可招募及治療
-function checkCabBeRecruited()
+function checkCabBeRecruited(isCross)
     if (existsClick("soldier.png")) then
         --print(find("recruite.png"))--495,308,880,548
         --local a = find("soldierPic.png")
@@ -484,6 +492,9 @@ function checkCabBeRecruited()
         --local canBeRe = soldierPicReg:exists("canBeRecruited.png")
         --print(canBeRe)
         if (existsClick("canBeRecruited.png") and existsClick("recruite.png")) then
+            if isCross then
+                existsClick("recruite.png")
+            end
             toast("自動招募")
             print("自動招募")
         end
@@ -494,6 +505,34 @@ function checkCabBeRecruited()
         end
         existsClick("close.png")
     end
+end
+
+--檢查網路斷線
+function checkNetwork()
+    if (existsClick("NetworkDisconnection.png")) then
+        print("網路斷線")
+        toast("網路斷線")
+        file:write("網路斷線\n")
+        if existsClick("sure.png") then
+            print("網路已重新連線")
+            toast("網路已重新連線")
+            file:write("網路已重新連線\n")
+            wait(2)
+        end
+    end
+end
+
+--跨服自動招募及治療
+function recruitInCross()
+    toast("跨服自動招募及治療")
+    local inHistoryBattle = exists("YuanShaoBack.png")
+    if inHistoryBattle==nil then
+        existsClick("historyBattle.png")
+        wait(5)
+    end
+    checkCabBeRecruited(true)
+    existsClick("historyBattleBack.png")
+    wait(5)
 end
 
 --對話框
@@ -510,6 +549,8 @@ function dialog()
     --addCheckBox("onlyHorseThief", "只打馬賊", false)
     addEditText("keyinSolderNum", "50000")
     addTextView("兵力少於多少不打怪")
+    --跨服自動招募及治療
+    addCheckBox("autoRecruitInCross", "跨服自動招募及治療", false)
     newRow()
     addCheckBox("autoResourceLevel", "設定採集等級", false)
     addEditText("resourceLevel", "6")
@@ -524,6 +565,8 @@ function dialog()
     addSpinnerIndex("actions1", actions, actions[2])
     addTextView("採集:")
     addSpinnerIndex("resourceActions1", resourceActions, resourceActions[1])
+    addTextView("起始方向:")
+    addSpinnerIndex("directions1", directions, directions[1])
     --addTextView("打怪/採集等級:")
     --addEditText("levels1", "")
     newRow()
@@ -531,6 +574,8 @@ function dialog()
     addSpinnerIndex("actions2", actions, actions[1])
     addTextView("採集:")
     addSpinnerIndex("resourceActions2", resourceActions, resourceActions[1])
+    addTextView("起始方向:")
+    addSpinnerIndex("directions2", directions, directions[1])
     --addTextView("打怪/採集等級:")
     --addEditText("levels2", "4,5")
     newRow()
@@ -538,6 +583,8 @@ function dialog()
     addSpinnerIndex("actions3", actions, actions[1])
     addTextView("採集:")
     addSpinnerIndex("resourceActions3", resourceActions, resourceActions[1])
+    addTextView("起始方向:")
+    addSpinnerIndex("directions3", directions, directions[1])
     --addTextView("打怪/採集等級:")
     --addEditText("levels3", "4,5")
     newRow()
@@ -545,6 +592,8 @@ function dialog()
     addSpinnerIndex("actions4", actions, actions[1])
     addTextView("採集:")
     addSpinnerIndex("resourceActions4", resourceActions, resourceActions[1])
+    addTextView("起始方向:")
+    addSpinnerIndex("directions4", directions, directions[1])
     --addTextView("打怪/採集等級:")
     --addEditText("levels4", "4,5")
     newRow()
@@ -553,12 +602,11 @@ function dialog()
     addCheckBox("autoRecruit", "自動招募及治療", true)
     --自動使用行軍令
     addCheckBox("autoUse", "自動使用行軍令", true)
-    dialogShow("請輸入以下資訊後點選OK。ver:20180524")
+    --dialogShow("請輸入以下資訊後點選OK。ver:".. thisVersion)
     --等待秒數
-    addTextView("等待秒數")
-    addEditText("inputWaitSec", "10")
-
-    newRow()
+    --addTextView("等待秒數")
+    --addEditText("inputWaitSec", "10")
+    dialogShow("請輸入以下資訊後點選OK。ver:".. thisVersion)
 end
 
 --------------------------- START
@@ -594,11 +642,16 @@ resourceActions[1] = resourceActions1
 resourceActions[2] = resourceActions2
 resourceActions[3] = resourceActions3
 resourceActions[4] = resourceActions4
+--Team Directions
+teamDirections[1] = directions1
+teamDirections[2] = directions2
+teamDirections[3] = directions3
 castleBeCenter()
 --dialogReg:save(dirName .. "1.jpg")
 --[[
 west = find("flag.png")
 building = find("building.png")
+teamDirections[4] = directions4
 print(west)
 print(building)
 Region(west:getX(),west:getY(),west:getH(),west:getW()):highlight(3)
@@ -619,6 +672,7 @@ local excuteCount = 0
 -- 方向
 direction = 1
 while (true) do
+    print("start")
     if excuteCount > 5000 then
         print("執行" .. excuteCount .. "次結束!")
         return -1
@@ -627,18 +681,23 @@ while (true) do
         file:close()
         file = io.open(fileName, "a")
     end
+    checkNetwork()
     if autoUseFreeBattle then
         toast("檢查兵臨城下")
         checkBeAttacked()
     end
     local executeTime = 0 + executeTimer:check()
+    print("start2")
     if autoRecruit and (excuteCount == 0 or executeTime > checkRecruitedSeconds) then
         -- 下次檢查時間
         if (excuteCount > 0) then
             checkRecruitedSeconds = checkRecruitedSeconds + checkRecruitedSeconds
         end
+        if autoRecruitInCross then
+            recruitInCross()
+        end
         toast("檢查可招募")
-        checkCabBeRecruited()
+        checkCabBeRecruited(false)
     end
     if excuteCount == 0 and autoResourceLevel then
         --設定採集等級

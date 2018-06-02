@@ -30,12 +30,31 @@
 	<div class="container">
 		<table class="table" id='downloadTable'>
 			<thead>
-				<tr>
-					<th scope="col">版本:20180520</th>					
+				<th scope="col">版本:20180520</th>
+				<th scope="col">版本:20180531</th>
+				<th scope="col">版本:20180602</th>
 			</thead>
 			<tbody>				
 				<tr>
-					<td scope="row"><a href="https://drive.google.com/open?id=1iWNlsLDfTx1mZ_N-FxJ4OPttiW0KDQHG" target="_blank">sango.zip</a></td>					
+					<td scope="row"><a href="https://drive.google.com/open?id=1iWNlsLDfTx1mZ_N-FxJ4OPttiW0KDQHG" target="_blank">sango_0520.zip</a></td>					
+					<td scope="row"><a href="https://drive.google.com/open?id=1zYJzvKe1Nm-lErkOTBGUgF5IinUZJKNz" target="_blank">sango_0531.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1Jy9v1-ElNfI5-p61MrPXskHVlD-elFil" target="_blank">sango_0602.zip</a></td>
+				</tr>
+				<tr>
+					<td scope="row">
+					</td>
+					<td scope="row">					
+					<ul>
+						<li>使用免戰時增加檢查是否已免戰</li>
+						<li>增加檢查網路斷線時重新連線</li>
+						<li>增加每隊可選方向</li>
+					</ul>
+					</td>
+					<td scope="row">					
+					<ul>
+						<li>增加跨服自動招募及治療</li>						
+					</ul>
+					</td>
 				</tr>				
 			</tbody>
 		</table>
