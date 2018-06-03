@@ -1,5 +1,5 @@
 -- ========== Settings ================
-thisVersion=20180602
+thisVersion=20180603
 Settings:setCompareDimension(true, 1280)
 Settings:setScriptDimension(true, 720)
 Settings:set("MinSimilarity", 0.9)
@@ -646,6 +646,7 @@ resourceActions[4] = resourceActions4
 teamDirections[1] = directions1
 teamDirections[2] = directions2
 teamDirections[3] = directions3
+teamDirections[4] = directions4
 castleBeCenter()
 --dialogReg:save(dirName .. "1.jpg")
 --[[
@@ -672,7 +673,6 @@ local excuteCount = 0
 -- 方向
 direction = 1
 while (true) do
-    print("start")
     if excuteCount > 5000 then
         print("執行" .. excuteCount .. "次結束!")
         return -1
@@ -687,7 +687,6 @@ while (true) do
         checkBeAttacked()
     end
     local executeTime = 0 + executeTimer:check()
-    print("start2")
     if autoRecruit and (excuteCount == 0 or executeTime > checkRecruitedSeconds) then
         -- 下次檢查時間
         if (excuteCount > 0) then
