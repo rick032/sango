@@ -51,9 +51,9 @@ hr {
 	box-sizing: content-box;
 }
 </style>
-<link
+<!-- <link
 	href="http://bootstrap.hexschool.com/docs/4.0/examples/grid/grid.css"
-	rel="stylesheet">
+	rel="stylesheet"> -->
 </head>
 <body>
 	<div class="container">

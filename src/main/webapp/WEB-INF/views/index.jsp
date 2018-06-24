@@ -30,18 +30,25 @@
 	<div class="container">
 		<table class="table" id='downloadTable'>
 			<thead>
-				<th scope="col">版本:20180520</th>
+				<th scope="col">操作助手Script for Android 4</th>				
 				<th scope="col">版本:20180531</th>
-				<th scope="col">版本:20180602</th>
+				<th scope="col">版本:20180603</th>
+				<th scope="col">版本:20180606</th>
+				<th scope="col">版本:20180617</th>
 			</thead>
 			<tbody>				
 				<tr>
-					<td scope="row"><a href="https://drive.google.com/open?id=1iWNlsLDfTx1mZ_N-FxJ4OPttiW0KDQHG" target="_blank">sango_0520.zip</a></td>					
+					<td scope="row"><a href="https://drive.google.com/open?id=10fTQrlvKnwFmueSA_ygFQbSJoCIXEzzv" target="_blank">操作助手.7z</a></td>							
 					<td scope="row"><a href="https://drive.google.com/open?id=1zYJzvKe1Nm-lErkOTBGUgF5IinUZJKNz" target="_blank">sango_0531.zip</a></td>
-					<td scope="row"><a href="https://drive.google.com/open?id=1Jy9v1-ElNfI5-p61MrPXskHVlD-elFil" target="_blank">sango_0602.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1-n6znfBwDJ1zgRzj804ngWqsg5_cu0Pb" target="_blank">sango_0603.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1wyf0MB97Wn2QJGGdaQACZJc281IMYYSE" target="_blank">sango_0606.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1I-DxWgH91IXBLoyfBQ1CvubWgGzniB4w" target="_blank">sango_0617.zip</a></td>
 				</tr>
 				<tr>
-					<td scope="row">
+					<td scope="row">					
+					<ul>
+						<li>操作助手設定每910秒執行/停止</li>
+					</ul>
 					</td>
 					<td scope="row">					
 					<ul>
@@ -52,7 +59,19 @@
 					</td>
 					<td scope="row">					
 					<ul>
-						<li>增加跨服自動招募及治療</li>						
+						<li>增加跨服自動招募及治療</li>
+						<li>fix 第四隊方向會出錯問題</li>						
+					</ul>
+					</td>
+					<td scope="row">					
+					<ul>
+						<li>fix兵力少於XX不出兵打怪的BUG</li>					
+					</ul>
+					</td>
+					<td scope="row">					
+					<ul>
+						<li>解決認證時出現SSL Exception</li>
+						<li>請改用新的操作助手執行</li>			
 					</ul>
 					</td>
 				</tr>				

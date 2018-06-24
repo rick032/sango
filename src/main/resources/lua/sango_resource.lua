@@ -1,5 +1,5 @@
 -- ========== Settings ================
-thisVersion=20180603
+thisVersion=20180617
 Settings:setCompareDimension(true, 1280)
 Settings:setScriptDimension(true, 720)
 Settings:set("MinSimilarity", 0.9)
@@ -28,23 +28,31 @@ dirName = dir .. "/" .. startDate .. "/"
 os.execute("mkdir " .. dirName)
 fileName = dirName .. startDate .. ".txt"
 file = io.open(fileName, "a")
-file:write("IMEI:" .. getIMEI())
-file:write(",IMSI:" .. getIMSI())
-file:write(",MacAddr:" .. getMacAddr())
-file:write(",SIMSerial:" .. getSIMSerial())
-file:write(",Device Id:" .. getDeviceID() .. "\n")
+--file:write("IMEI:" .. getIMEI())
+--file:write(",IMSI:" .. getIMSI())
+--file:write(",MacAddr:" .. getMacAddr())
+--file:write(",SIMSerial:" .. getSIMSerial())
+--file:write(",Device Id:" .. getDeviceID() .. "\n")
 --params = { imei = getIMEI(), macAddr = getMacAddr(), device = getDeviceID() }
-varResult = httpGet("https://weighty-site-140903.appspot.com/check?macAddr=" .. getMacAddr().."&version=" ..thisVersion .."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
---varResult = httpGet("http://localhost:8080/check?macAddr=" .. getMacAddr().."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
-toast("認證:" .. varResult)
-if varResult == "N" then
-    scriptExit("非認證過的機器 macAddr=" .. getMacAddr() .. " deviceId=" .. getDeviceID() .. " IMEI=" .. getIMEI())
-elseif varResult == "1" then
-    scriptExit("啟動時間未到 macAddr=" .. getMacAddr() )
-elseif varResult == "2" then
-    scriptExit("認證已過期 macAddr=" .. getMacAddr() )
-elseif varResult == "3" then
-    scriptExit("認證未啟用 macAddr=" .. getMacAddr() )
+local varResult = false
+function doHttpGet()
+    --varResult = httpGet("http://localhost:8080/check?macAddr=" .. getMacAddr().."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
+    varResult = httpGet("https://weighty-site-140903.appspot.com/check?macAddr=" .. getMacAddr().."&version=" ..thisVersion .."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
+end
+function validMac()
+    while (not pcall(doHttpGet)) do
+        toast("Exception!! valid again!")
+    end
+    toast("認證:"..varResult)
+    if varResult == "N" then
+        scriptExit("非認證過的機器 macAddr=" .. getMacAddr() .. " deviceId=" .. getDeviceID() .. " IMEI=" .. getIMEI())
+    elseif varResult == "1" then
+        scriptExit("啟動時間未到 macAddr=" .. getMacAddr() )
+    elseif varResult == "2" then
+        scriptExit("認證已過期 macAddr=" .. getMacAddr() )
+    elseif varResult == "3" then
+        scriptExit("認證未啟用 macAddr=" .. getMacAddr() )
+    end
 end
 
 local deviceId = { "農田", "伐木", "採石", "治煉" }
@@ -544,10 +552,10 @@ function dialog()
 
     dialogInit()
     --設定總隊數
-    addTextView("目前的總隊數ex:4")
+    addTextView("目前的總隊數:")
     addEditText("keyingTeams", "4")
     --addCheckBox("onlyHorseThief", "只打馬賊", false)
-    addEditText("keyinSolderNum", "50000")
+    addEditText("keyinSolder", "100000")
     addTextView("兵力少於多少不打怪")
     --跨服自動招募及治療
     addCheckBox("autoRecruitInCross", "跨服自動招募及治療", false)
@@ -623,12 +631,14 @@ file:write("startTime:" .. startTime .. "\n")
 executeTimer = Timer()
 --對話框
 dialog()
+--驗MAC
+validMac()
 BanditLevel = ""
 WaitSecond = preferenceGetNumber(inputWaitSec, 10)
 --隊伍有幾隊
 allTeams = preferenceGetNumber(keyingTeams, 4)
 --兵力少於多少不打怪
-keyinSolderNum = preferenceGetNumber(keyinSolderNum, 30000)
+--keyinSolderNum = preferenceGetNumber(keyinSolder, 30000)
 
 --every 5 min check Be Recruited
 checkRecruitedSeconds = 60 * 5
@@ -715,21 +725,21 @@ while (true) do
             if (existsClick("flag.png")) then
                 local teamNum = 1
                 while teamNum <= allTeams do
-                    --toast("teamNum:" .. teamNum)
-                    --toast("notFoundBanditTeam:" .. notFoundBanditTeam)
                     if teamNum ~= notFoundBanditTeam then
                         local teamStandy = Pattern("team" .. teamNum .. "Standy.png"):similar(0.95)
 
                         if teamActions[teamNum] ~= 3 then
                             local aviTeam = exists(teamStandy)
                             if aviTeam then
-                                if keyinSolderNum and teamActions[teamNum] == 2 then
+                                --toast("keyinSolderNum"..keyinSolder)
+                                --toast("teamActions[teamNum]"..teamActions[teamNum])
+                                if keyinSolder and teamActions[teamNum] == 2 then
                                     click(aviTeam)
                                     local solderReg = Region(313, 100, 68, 20):highlight(3)
                                     local solderNum = numberOCR(solderReg, "wi")
-                                    toast("keyinSolderNum:"..keyinSolderNum .." Solders:"..solderNum)
-                                    if tonumber(solderNum) < keyinSolderNum then
-                                        toast("兵力太少:" .. solderNum)
+                                    toast("keyinSolderNum:"..keyinSolder .." Solders:"..solderNum)
+                                    if tonumber(solderNum) < tonumber(keyinSolder) then
+                                        toast("兵力太少:" .. keyinSolder)
                                         existsClick("close.png")
                                         notFoundBanditTeam = teamNum
                                         break
