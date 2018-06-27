@@ -1,5 +1,5 @@
 -- ========== Settings ================
-thisVersion=20180617
+thisVersion = 20180627
 Settings:setCompareDimension(true, 1280)
 Settings:setScriptDimension(true, 720)
 Settings:set("MinSimilarity", 0.9)
@@ -37,21 +37,22 @@ file = io.open(fileName, "a")
 local varResult = false
 function doHttpGet()
     --varResult = httpGet("http://localhost:8080/check?macAddr=" .. getMacAddr().."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
-    varResult = httpGet("https://weighty-site-140903.appspot.com/check?macAddr=" .. getMacAddr().."&version=" ..thisVersion .."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
+    varResult = httpGet("https://weighty-site-140903.appspot.com/check?macAddr=" .. getMacAddr() .. "&version=" .. thisVersion .. "&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
 end
+
 function validMac()
     while (not pcall(doHttpGet)) do
         toast("Exception!! valid again!")
     end
-    toast("認證:"..varResult)
+    toast("認證:" .. varResult)
     if varResult == "N" then
         scriptExit("非認證過的機器 macAddr=" .. getMacAddr() .. " deviceId=" .. getDeviceID() .. " IMEI=" .. getIMEI())
     elseif varResult == "1" then
-        scriptExit("啟動時間未到 macAddr=" .. getMacAddr() )
+        scriptExit("啟動時間未到 macAddr=" .. getMacAddr())
     elseif varResult == "2" then
-        scriptExit("認證已過期 macAddr=" .. getMacAddr() )
+        scriptExit("認證已過期 macAddr=" .. getMacAddr())
     elseif varResult == "3" then
-        scriptExit("認證未啟用 macAddr=" .. getMacAddr() )
+        scriptExit("認證未啟用 macAddr=" .. getMacAddr())
     end
 end
 
@@ -93,6 +94,20 @@ function split(str, del)
     return { str:match((("%s*(.-)%s*" .. del .. "%s*"):rep(nrep) .. "(.*)")) }
 end
 
+function checkLevel(ResourceLevel)
+    existsClick("clearCheck.png")
+    --勾選採集
+    local b = split(ResourceLevel, ",")
+    for i, level in ipairs(b) do
+        if exists("display" .. level .. ".png") then
+            toast("開始勾選" .. level .. "級採集")
+            local matchLevel = find(Pattern("display" .. level .. ".png"):similar(0.85))
+            local matchReg = Region(matchLevel:getX() - 22, matchLevel:getY(), 10, 10)
+            --matchReg:highlight(2)
+            click(matchReg)
+        end
+    end
+end
 
 --設定採集等級
 function settingResourceLevel(ResourceLevel)
@@ -105,46 +120,48 @@ function settingResourceLevel(ResourceLevel)
     existsClick("resource.png")
     --click(dialogReg:find("levelSort.png"))
     click("levelSort.png")
-    if exists(Pattern("displayAllResourceChecked.png"):similar(0.95)) then
-        click(Pattern("displayAllResourceChecked.png"):targetOffset(-40, 0))
-    end
+    --if exists(Pattern("displayAllResourceChecked.png"):similar(0.95)) then
+    --    click(Pattern("displayAllResourceChecked.png"):targetOffset(-40, 0))
+    --end
 
-    local match2Level = find("display2.png")
-    local matchWood = find("wood.png")
+    --local match2Level = find("display2.png")
+    --local matchWood = find("wood.png")
 
-    swipe(match2Level, matchWood)
+    --swipe(match2Level, matchWood)
 
-    toast("do Uncheck All")
-    doUncheckAll()
-    local resourse_similar = 0.9
+    --toast("do Uncheck All")
+    --doUncheckAll()
+    --local resourse_similar = 0.9
     if CheckFarmland then
-        local matchLevel = find(Pattern("farmland.png"):similar(resourse_similar))
-        click(Region(matchLevel:getX() - 30, matchLevel:getY(), 10, 10))
-    end
-    if CheckWood then
-        local matchLevel = find(Pattern("wood.png"):similar(resourse_similar))
-        click(Region(matchLevel:getX() - 30, matchLevel:getY(), 10, 10))
-    end
-    if CheckStone then
-        local matchLevel = find(Pattern("stone.png"):similar(0.7))
-        click(Region(matchLevel:getX() - 30, matchLevel:getY(), 10, 10))
-    end
-    if CheckIron then
-        local matchLevel = find(Pattern("iron.png"):similar(resourse_similar))
-        click(Region(matchLevel:getX() - 30, matchLevel:getY(), 10, 10))
-    end
-
-    --勾選採集
-    local b = split(ResourceLevel, ",")
-    for i, level in ipairs(b) do
-        if exists("display" .. level .. ".png") then
-            toast("開始勾選" .. level .. "級採集")
-            local matchLevel = find(Pattern("display" .. level .. ".png"):similar(resourse_similar))
-            local matchReg = Region(matchLevel:getX() - 30, matchLevel:getY(), 10, 10)
-            --matchReg:highlight(2)
-            click(matchReg)
+        --local matchLevel = find(Pattern("farmland.png"):similar(resourse_similar))
+        --click(Region(matchLevel:getX() - 30, matchLevel:getY(), 10, 10))
+        if existsClick("farmland.png") then
+            checkLevel(ResourceLevel)
         end
     end
+    if CheckWood then
+        --local matchLevel = find(Pattern("wood.png"):similar(resourse_similar))
+        --click(Region(matchLevel:getX() - 30, matchLevel:getY(), 10, 10))
+        if existsClick("wood.png") then
+            checkLevel(ResourceLevel)
+        end
+    end
+    if CheckStone then
+        --local matchLevel = find(Pattern("stone.png"):similar(0.7))
+        --click(Region(matchLevel:getX() - 30, matchLevel:getY(), 10, 10))
+        if existsClick("stone.png") then
+            checkLevel(ResourceLevel)
+        end
+    end
+    if CheckIron then
+        --local matchLevel = find(Pattern("iron.png"):similar(resourse_similar))
+        --click(Region(matchLevel:getX() - 30, matchLevel:getY(), 10, 10))
+        if existsClick("iron.png") then
+            checkLevel(ResourceLevel)
+        end
+    end
+
+
     --dialogReg:save("../".. startDate .. "/resource.png")
     click("close.png")
     existsClick("close.png")
@@ -231,7 +248,7 @@ function loopAttack(teamNum, pointA, pointB)
             goToResource = dialogReg:exists(resource)
         end
         if goToResource ~= nil then
-            toast("similar:"..goToResource:getScore())
+            toast("similar:" .. goToResource:getScore())
             --goToResource = dialogReg:find(resource)
             goToResource:highlight(3)
             --print(goToResource)
@@ -248,49 +265,39 @@ function loopAttack(teamNum, pointA, pointB)
         --end
     elseif action == 2 then
         existsClick("bandit.png")
-        if onlyHorseThief then
-            local goToHorseThief = dialogReg:exists(Pattern("horseThief.png"):similar(0.99))
-            if goToHorseThief == nil then
-                swipe(Location(370, 300), Location(370, 100))
-                goToHorseThief = dialogReg:exists(Pattern("horseThief.png"):similar(0.99))
-            end
-            if goToHorseThief ~= nil then
-                goToHorseThief:highlight(3)
-                local goTo = goToHorseThief:exists("GoTo.png")
-                if goTo ~= nil then
-                    click(goTo)
-                    if existsClick("attack.png") then
-                        found = true
-                        wait(1)
-                    end
-                end
-            end
-        else
-            local ex = dialogReg:exists("GoTo.png")
-            if ex == nil then
-                swipe(Location(370, 300), Location(370, 100))
-                ex = dialogReg:exists("GoTo.png")
-            end
-            if ex ~= nil then
-                local goTo = dialogReg:exists("GoTo.png")
-                if goTo ~= nil then
-                    click(goTo)
-                    if existsClick("attack.png") then
-                        found = true
-                        wait(1)
-                    end
+
+        local ex = dialogReg:exists("GoTo.png")
+        if ex == nil then
+            swipe(Location(370, 300), Location(370, 100))
+            ex = dialogReg:exists("GoTo.png")
+        end
+        if ex ~= nil then
+            local goTo = dialogReg:exists("GoTo.png")
+            if goTo ~= nil then
+                click(goTo)
+                if existsClick("attack.png") then
+                    found = true
+                    wait(1)
                 end
             end
         end
     end
     if found then
-        local useMarch = exists("use2.png")
+        wait(1)
+        local useMarch = exists("use.png")
+
         if useMarch then
+            --toast("match")
             if autoUse then
-                if existsClick("use2.png") then
+                if existsClick("use.png") then
                     toast("使用行軍令")
-                    existsClick("attack.png")
+                    --existsClick("attack.png")
                     file:write("使用行軍令\n")
+                    if teamActions[teamNum] == 1 then
+                        existsClick("collection.png")
+                    elseif teamActions[teamNum] == 2 then
+                        existsClick("attack.png")
+                    end
                 end
             else
                 print("無軍令可使用，請勾選自動使用軍令。")
@@ -303,7 +310,7 @@ function loopAttack(teamNum, pointA, pointB)
         --設定那一隊
         --while (i <= allTeams and not found) do
         --local team = Pattern("team" .. i .. ".png"):similar(0.96) -- chooseTeam:find("team" .. i .. ".png")
-        local team = Pattern("team" .. teamNum .. ".png"):similar(0.96)
+        local team = Pattern("team" .. teamNum .. ".png"):similar(0.94)
         if (existsClick(team)) then
             toast("team" .. teamNum)
             if teamActions[teamNum] == 2 and exists("Departure.png") then
@@ -506,10 +513,9 @@ function checkCabBeRecruited(isCross)
             toast("自動招募")
             print("自動招募")
         end
-        if (existsClick("treatable.png")) then
+        if (existsClick("treatable.png") and existsClick("treatment.png")) then
             toast("自動治療")
             print("自動治療")
-            click("treatment.png")
         end
         existsClick("close.png")
     end
@@ -534,7 +540,7 @@ end
 function recruitInCross()
     toast("跨服自動招募及治療")
     local inHistoryBattle = exists("YuanShaoBack.png")
-    if inHistoryBattle==nil then
+    if inHistoryBattle == nil then
         existsClick("historyBattle.png")
         wait(5)
     end
@@ -548,7 +554,7 @@ function dialog()
     --removePreference("cbValue")
     actions = { "採集", "打怪", "不動作" }
     resourceActions = { "農田", "伐木", "採石", "治煉" }
-    directions = {"東","西","北","南","東北","西南","西北","東南"}
+    directions = { "東", "西", "北", "南", "東北", "西南", "西北", "東南" }
 
     dialogInit()
     --設定總隊數
@@ -614,7 +620,7 @@ function dialog()
     --等待秒數
     --addTextView("等待秒數")
     --addEditText("inputWaitSec", "10")
-    dialogShow("請輸入以下資訊後點選OK。ver:".. thisVersion)
+    dialogShow("請輸入以下資訊後點選OK。ver:" .. thisVersion)
 end
 
 --------------------------- START
@@ -737,7 +743,7 @@ while (true) do
                                     click(aviTeam)
                                     local solderReg = Region(313, 100, 68, 20):highlight(3)
                                     local solderNum = numberOCR(solderReg, "wi")
-                                    toast("keyinSolderNum:"..keyinSolder .." Solders:"..solderNum)
+                                    toast("keyinSolderNum:" .. keyinSolder .. " Solders:" .. solderNum)
                                     if tonumber(solderNum) < tonumber(keyinSolder) then
                                         toast("兵力太少:" .. keyinSolder)
                                         existsClick("close.png")
@@ -759,7 +765,7 @@ while (true) do
                                 elseif result == 4 then
                                     toast("找不到" .. BanditLevel .. "寇匪/資源")
                                     direction = 1
-                                    file:write("team"..teamNum.."找不到寇匪/資源!!\n")
+                                    file:write("team" .. teamNum .. "找不到寇匪/資源!!\n")
                                     notFoundBanditTeam = teamNum
                                     break
                                 elseif result == 1 then

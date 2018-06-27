@@ -34,7 +34,7 @@
 				<th scope="col">版本:20180531</th>
 				<th scope="col">版本:20180603</th>
 				<th scope="col">版本:20180606</th>
-				<th scope="col">版本:20180617</th>
+				<th scope="col">版本:20180627</th>
 			</thead>
 			<tbody>				
 				<tr>
@@ -42,7 +42,7 @@
 					<td scope="row"><a href="https://drive.google.com/open?id=1zYJzvKe1Nm-lErkOTBGUgF5IinUZJKNz" target="_blank">sango_0531.zip</a></td>
 					<td scope="row"><a href="https://drive.google.com/open?id=1-n6znfBwDJ1zgRzj804ngWqsg5_cu0Pb" target="_blank">sango_0603.zip</a></td>
 					<td scope="row"><a href="https://drive.google.com/open?id=1wyf0MB97Wn2QJGGdaQACZJc281IMYYSE" target="_blank">sango_0606.zip</a></td>
-					<td scope="row"><a href="https://drive.google.com/open?id=1I-DxWgH91IXBLoyfBQ1CvubWgGzniB4w" target="_blank">sango_0617.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1FpheCaxqdewx1yOKGpsmoXBHuLKs4e3v" target="_blank">sango_0627.zip</a></td>
 				</tr>
 				<tr>
 					<td scope="row">					
@@ -71,7 +71,8 @@
 					<td scope="row">					
 					<ul>
 						<li>解決認證時出現SSL Exception</li>
-						<li>請改用新的操作助手執行</li>			
+						<li>請改用新的操作助手執行</li>
+						<li>更新1.6.0版</li>			
 					</ul>
 					</td>
 				</tr>				
