@@ -30,37 +30,34 @@
 	<div class="container">
 		<table class="table" id='downloadTable'>
 			<thead>
-				<th scope="col">操作助手Script for Android 4</th>				
-				<th scope="col">版本:20180531</th>
+				<th scope="col">操作助手0627</th>
 				<th scope="col">版本:20180603</th>
 				<th scope="col">版本:20180606</th>
 				<th scope="col">版本:20180627</th>
+				<th scope="col">版本:20180701</th>
 			</thead>
 			<tbody>				
 				<tr>
-					<td scope="row"><a href="https://drive.google.com/open?id=10fTQrlvKnwFmueSA_ygFQbSJoCIXEzzv" target="_blank">操作助手.7z</a></td>							
-					<td scope="row"><a href="https://drive.google.com/open?id=1zYJzvKe1Nm-lErkOTBGUgF5IinUZJKNz" target="_blank">sango_0531.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=10oRPL_EAwZznba-jCx_hh7Mki7Io16Ws" target="_blank">操作助手.7z</a></td>							
+					<!-- <td scope="row"><a href="https://drive.google.com/open?id=1zYJzvKe1Nm-lErkOTBGUgF5IinUZJKNz" target="_blank">sango_0531.zip</a></td> -->
 					<td scope="row"><a href="https://drive.google.com/open?id=1-n6znfBwDJ1zgRzj804ngWqsg5_cu0Pb" target="_blank">sango_0603.zip</a></td>
 					<td scope="row"><a href="https://drive.google.com/open?id=1wyf0MB97Wn2QJGGdaQACZJc281IMYYSE" target="_blank">sango_0606.zip</a></td>
 					<td scope="row"><a href="https://drive.google.com/open?id=1FpheCaxqdewx1yOKGpsmoXBHuLKs4e3v" target="_blank">sango_0627.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1VMJJlZBZ2jxpL33WAfc5XwPmKflenN0W" target="_blank">sango_0701.zip</a></td>
 				</tr>
 				<tr>
 					<td scope="row">					
 					<ul>
 						<li>操作助手設定每910秒執行/停止</li>
 					</ul>
-					</td>
-					<td scope="row">					
-					<ul>
-						<li>使用免戰時增加檢查是否已免戰</li>
-						<li>增加檢查網路斷線時重新連線</li>
-						<li>增加每隊可選方向</li>
-					</ul>
-					</td>
+					</td>					
 					<td scope="row">					
 					<ul>
 						<li>增加跨服自動招募及治療</li>
-						<li>fix 第四隊方向會出錯問題</li>						
+						<li>fix 第四隊方向會出錯問題</li>		
+						<li>使用免戰時增加檢查是否已免戰</li>
+						<li>增加檢查網路斷線時重新連線</li>
+						<li>增加每隊可選方向</li>				
 					</ul>
 					</td>
 					<td scope="row">					
@@ -73,6 +70,11 @@
 						<li>解決認證時出現SSL Exception</li>
 						<li>請改用新的操作助手執行</li>
 						<li>更新1.6.0版</li>			
+					</ul>
+					</td>
+					<td scope="row">					
+					<ul>
+						<li>fix bug</li>			
 					</ul>
 					</td>
 				</tr>				

@@ -1,5 +1,5 @@
 -- ========== Settings ================
-thisVersion = 20180627
+thisVersion = 20180701
 Settings:setCompareDimension(true, 1280)
 Settings:setScriptDimension(true, 720)
 Settings:set("MinSimilarity", 0.9)
@@ -16,6 +16,7 @@ beAttackedReg = Region(260, 30, 150, 30)
 chooseTeam = Region(80, 50, 120, 300)
 soldierPicReg = Region(98, 89, 174, 158)
 centerLocation = Location(340, 179)
+chooseTeamReg = Region(98,60,86,250)
 hitBanditCount = 0
 collectionCount = 0
 teamActions = {}
@@ -243,7 +244,8 @@ function loopAttack(teamNum, pointA, pointB)
         --print(resource)
         --dialogReg:highlight(2)
         local goToResource = dialogReg:exists(resource)
-        if goToResource == nil then
+        local goTo = dialogReg:exists("GoTo.png")
+        if goToResource == nil and goTo ~= nil then
             swipe(Location(370, 300), Location(370, 100))
             goToResource = dialogReg:exists(resource)
         end
@@ -252,7 +254,7 @@ function loopAttack(teamNum, pointA, pointB)
             --goToResource = dialogReg:find(resource)
             goToResource:highlight(3)
             --print(goToResource)
-            local goTo = goToResource:exists("GoTo.png")
+            goTo = goToResource:exists("GoTo.png")
             if goTo ~= nil then
                 click(goTo)
                 if existsClick("collection.png") then
@@ -265,20 +267,12 @@ function loopAttack(teamNum, pointA, pointB)
         --end
     elseif action == 2 then
         existsClick("bandit.png")
-
-        local ex = dialogReg:exists("GoTo.png")
-        if ex == nil then
-            swipe(Location(370, 300), Location(370, 100))
-            ex = dialogReg:exists("GoTo.png")
-        end
-        if ex ~= nil then
-            local goTo = dialogReg:exists("GoTo.png")
-            if goTo ~= nil then
-                click(goTo)
-                if existsClick("attack.png") then
-                    found = true
-                    wait(1)
-                end
+        local goTo = dialogReg:exists("GoTo.png")
+        if goTo ~= nil then
+            click(goTo)
+            if existsClick("attack.png") then
+                found = true
+                wait(1)
             end
         end
     end
@@ -310,8 +304,12 @@ function loopAttack(teamNum, pointA, pointB)
         --設定那一隊
         --while (i <= allTeams and not found) do
         --local team = Pattern("team" .. i .. ".png"):similar(0.96) -- chooseTeam:find("team" .. i .. ".png")
-        local team = Pattern("team" .. teamNum .. ".png"):similar(0.94)
-        if (existsClick(team)) then
+        --local team = Pattern("team" .. teamNum .. ".png"):similar(0.94)
+        local team = chooseTeamReg:exists("team" .. teamNum .. ".png")
+        --toast(findTeam:getX()..","..findTeam:getY()..","..findTeam:getH()..","..findTeam:getW())
+        --if (existsClick(team)) then
+        if (team~=nil) then
+            click(team)
             toast("team" .. teamNum)
             if teamActions[teamNum] == 2 and exists("Departure.png") then
                 click("Departure.png")
@@ -344,14 +342,16 @@ function loopAttack(teamNum, pointA, pointB)
             toast("檢查兵臨城下")
             checkBeAttacked()
         end
+        --Region(pointA:getX(), pointA:getY(), 10, 10):highlight(1)
+        --Region(pointB:getX(), pointB:getY(), 10, 10):highlight(1)
         if direction == 1 then
-            local west = Region(pointA:getX() + swipeDistince, pointA:getY(), 10, 10)
+            --local west = Region(pointA:getX() + swipeDistince, pointA:getY(), 10, 10)
             toast("往東尋找第" .. loopAttackCount .. "次")
-            swipe(west, pointA)
+            swipe(pointB, pointA)
         elseif direction == 2 then
-            local east = Region(pointB:getX() - swipeDistince, pointB:getY(), 10, 10)
+            --local east = Region(pointB:getX() - swipeDistince, pointB:getY(), 10, 10)
             toast("往西尋找第" .. loopAttackCount .. "次")
-            swipe(east, pointB)
+            swipe(pointA, pointB)
         elseif direction == 3 then
             toast("往北尋找第" .. loopAttackCount .. "次")
             swipe(pointA, pointB)
@@ -378,24 +378,14 @@ end
 
 function findBattle(teamNum)
     --8個方向
-    local east
-    local west
-    local north = Location(392, 120)
-    local south = Location(392, 320)
-    local northEast = Location(500, 120)
-    local southWest = Location(60, 320)
+    local east = Location(500, 310)
+    local west = Location(60, 310)
+    local north = Location(120, 100)
+    local south = Location(120, 310)
+    local northEast = Location(500, 140)
+    local southWest = Location(60, 310)
     local northWest = Location(60, 120)
-    local southEast = Location(400, 320)
-    if exists("flag.png") then
-        west = find("flag.png")
-    else
-        west = find("building.png")
-    end
-    if exists("activity.png") then
-        east = find("activity.png")
-    else
-        east = find("mall.png")
-    end
+    local southEast = Location(400, 310)
 
     toast("開始尋找" .. BanditLevel)
     local count = 1
@@ -450,11 +440,11 @@ function checkBeAttacked()
                     print("免戰已存在")
                     file:write("免戰已存在\n")
                 else
-                    if freeBattleDivReg:exists("use.png") then
-                        click(freeBattleDivReg:find("use.png"))
+                    if freeBattleDivReg:exists("use2.png") then
+                        click(freeBattleDivReg:find("use2.png"))
                         print("使用免戰")
                         file:write("使用免戰\n")
-                        --aa = freeBattleDivReg:find("use.png")
+                        --aa = freeBattleDivReg:find("use2.png")
                         --aa:highlight(4)
                     elseif freeBattleDivReg:exists("buyUse.png") then
                         click(freeBattleDivReg:find("buyUse.png"))
@@ -512,10 +502,14 @@ function checkCabBeRecruited(isCross)
             end
             toast("自動招募")
             print("自動招募")
+            wait(1)
         end
-        if (existsClick("treatable.png") and existsClick("treatment.png")) then
-            toast("自動治療")
-            print("自動治療")
+        if (existsClick("treatable.png")) then
+            wait(1)
+            if existsClick("treatment.png") then
+                toast("自動治療")
+                print("自動治療")
+            end
         end
         existsClick("close.png")
     end
@@ -664,6 +658,8 @@ teamDirections[2] = directions2
 teamDirections[3] = directions3
 teamDirections[4] = directions4
 castleBeCenter()
+
+
 --dialogReg:save(dirName .. "1.jpg")
 --[[
 west = find("flag.png")
@@ -673,6 +669,7 @@ print(west)
 print(building)
 Region(west:getX(),west:getY(),west:getH(),west:getW()):highlight(3)
 Region(building:getX(),building:getY(),building:getH(),building:getW()):highlight(3)
+
 --設定採集等級,空白則不設定
 if resourceLevel ~= "" then
     settingResourceLevel(resourceLevel)
@@ -769,8 +766,8 @@ while (true) do
                                     notFoundBanditTeam = teamNum
                                     break
                                 elseif result == 1 then
-                                    toast("移動中請等待" .. WaitSecond .. "秒!")
-                                    wait(WaitSecond)
+                                    toast("移動中請等待!")
+                                    --wait(WaitSecond)
                                     notFoundBanditTeam = 0
                                 end
                             end
