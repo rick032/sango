@@ -1,13 +1,12 @@
 insert into users(username,password,enabled) values('admin','$2a$10$Wm1ZQOMu9/o8vE5D1od1zeTwGXugeFhAhs/bOqEMg26ovw1jk9TG.',true);
 insert into authorities(username,authority)  values('admin','ROLE_ADMIN');
 
-insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:E8:F1:D0','359090150142188','214dae9e9352e872','若嚴','rick',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
-insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:40:89:C3','359090150142188','14dae9e9352e2959','小號','rick',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
-insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:14:8D:A5','359090150142188','14dae9e9352e2959','孤苟寒','孤苟寒',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
-insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:95:10:10','359090150142188','14dae9e9352e2959','孤玖寒','孤苟寒',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
-insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:A8:DB:C2','359090150142188','14dae9e9352e2959','孤玖寒2','孤苟寒',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
+insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:6F:02:B5','359090150142188','214dae9e9352e872','若嚴','rick',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
+insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:D9:D4:C1','359090150142188','14dae9e9352e2959','孤苟寒','孤苟寒',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
+insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:BE:0B:EA','359090150142188','14dae9e9352e2959','孤玖寒','孤苟寒',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
+insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:A7:42:9C','359090150142188','14dae9e9352e2959','孤玖寒2','孤苟寒',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
 insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:1E:CC:EB','359090150142188','14dae9e9352e2959','帆苟禮','猴子爸爸',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
-insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:38:6D:70','359090150142188','14dae9e9352e2959','帆苟禮','猴子爸爸Mac',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
-insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:8E:6B:BD','359090150142188','14dae9e9352e2959','猴子爸爸朋友','猴子爸爸朋友',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
-insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:83:51:D1','359090150142188','14dae9e9352e2959','吊苟禮','宣剪',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
-insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:7F:59:0B','359090150142188','14dae9e9352e2959','Miao','忽必烈',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
+insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:97:2C:77','359090150142188','14dae9e9352e2959','帆苟禮','猴子爸爸Mac',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
+insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:B5:33:53','359090150142188','14dae9e9352e2959','咒怨馬','AndyKao',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
+insert into DEVICE(oid,MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(UUID(),'08:00:27:BE:ED:C6','359090150142188','14dae9e9352e2959','富士山','張哲滈',true,CURRENT_TIMESTAMP,TIMESTAMPADD(YEAR,1,CURRENT_DATE));
+;

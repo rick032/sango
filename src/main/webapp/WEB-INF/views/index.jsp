@@ -30,25 +30,25 @@
 	<div class="container">
 		<table class="table" id='downloadTable'>
 			<thead>
+				<th scope="col">說明文件</th>
 				<th scope="col">操作助手0627</th>
-				<th scope="col">版本:20180603</th>
-				<th scope="col">版本:20180606</th>
-				<th scope="col">版本:20180627</th>
-				<th scope="col">版本:20180701</th>
+				<th scope="col">版本:20180722</th>
 			</thead>
 			<tbody>				
 				<tr>
-					<td scope="row"><a href="https://drive.google.com/open?id=10oRPL_EAwZznba-jCx_hh7Mki7Io16Ws" target="_blank">操作助手.7z</a></td>							
-					<!-- <td scope="row"><a href="https://drive.google.com/open?id=1zYJzvKe1Nm-lErkOTBGUgF5IinUZJKNz" target="_blank">sango_0531.zip</a></td> -->
-					<td scope="row"><a href="https://drive.google.com/open?id=1-n6znfBwDJ1zgRzj804ngWqsg5_cu0Pb" target="_blank">sango_0603.zip</a></td>
-					<td scope="row"><a href="https://drive.google.com/open?id=1wyf0MB97Wn2QJGGdaQACZJc281IMYYSE" target="_blank">sango_0606.zip</a></td>
-					<td scope="row"><a href="https://drive.google.com/open?id=1FpheCaxqdewx1yOKGpsmoXBHuLKs4e3v" target="_blank">sango_0627.zip</a></td>
-					<td scope="row"><a href="https://drive.google.com/open?id=1VMJJlZBZ2jxpL33WAfc5XwPmKflenN0W" target="_blank">sango_0701.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1SDZ_Y9YCfXRnSJVm0PnHIY3HuJgkmag-" target="_blank">說明文件</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1dIEXFO1jHHXcMqiDysCL6ERN2oFIXICt" target="_blank">操作助手.7z</a></td>										
+					<td scope="row"><a href="https://drive.google.com/open?id=14sbnNkb0TxXEAy7lXid8FepEdpM-VCur" target="_blank">sango_0722.zip</a></td>
 				</tr>
 				<tr>
 					<td scope="row">					
 					<ul>
-						<li>操作助手設定每910秒執行/停止</li>
+						<li>說明文件</li>
+					</ul>
+					</td>
+					<td scope="row">					
+					<ul>
+						<li>操作助手設定每900秒執行/停止</li>
 					</ul>
 					</td>					
 					<td scope="row">					
@@ -57,26 +57,14 @@
 						<li>fix 第四隊方向會出錯問題</li>		
 						<li>使用免戰時增加檢查是否已免戰</li>
 						<li>增加檢查網路斷線時重新連線</li>
-						<li>增加每隊可選方向</li>				
+						<li>增加每隊可選方向</li>
+						<li>增加每10分鐘檢查網路斷線</li>
+						<li>增加採集資源選項增加不限</li>
+						<li>增加每次10次找不到可用隊伍時會回主城</li>
+						<li>fix bug</li>
+						<li>更新1.6.0版</li>				
 					</ul>
-					</td>
-					<td scope="row">					
-					<ul>
-						<li>fix兵力少於XX不出兵打怪的BUG</li>					
-					</ul>
-					</td>
-					<td scope="row">					
-					<ul>
-						<li>解決認證時出現SSL Exception</li>
-						<li>請改用新的操作助手執行</li>
-						<li>更新1.6.0版</li>			
-					</ul>
-					</td>
-					<td scope="row">					
-					<ul>
-						<li>fix bug</li>			
-					</ul>
-					</td>
+					</td>					
 				</tr>				
 			</tbody>
 		</table>

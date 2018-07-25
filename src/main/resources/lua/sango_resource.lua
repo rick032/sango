@@ -1,5 +1,5 @@
 -- ========== Settings ================
-thisVersion = 20180701
+thisVersion = 20180722
 Settings:setCompareDimension(true, 1280)
 Settings:setScriptDimension(true, 720)
 Settings:set("MinSimilarity", 0.9)
@@ -35,6 +35,7 @@ file = io.open(fileName, "a")
 --file:write(",SIMSerial:" .. getSIMSerial())
 --file:write(",Device Id:" .. getDeviceID() .. "\n")
 --params = { imei = getIMEI(), macAddr = getMacAddr(), device = getDeviceID() }
+
 local varResult = false
 function doHttpGet()
     --varResult = httpGet("http://localhost:8080/check?macAddr=" .. getMacAddr().."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
@@ -229,7 +230,7 @@ function loopAttack(teamNum, pointA, pointB)
         local resource
         --dialogReg:highlight(4)
         --print(resourceActions[teamNum] )
-        local resourceSimilar = 0.97
+        local resourceSimilar = 0.973
         if resourceActions[teamNum] == 1 then
             resource = Pattern("goToFarmland.png"):similar(resourceSimilar)
         elseif resourceActions[teamNum] == 2 then
@@ -240,6 +241,8 @@ function loopAttack(teamNum, pointA, pointB)
             resource = Pattern("goToStone.png"):similar(resourceSimilar)
         elseif resourceActions[teamNum] == 4 then
             resource = Pattern("goToIron.png"):similar(resourceSimilar)
+        elseif resourceActions[teamNum] == 5 then
+            resource = Pattern("goToUnlimited.png"):similar(resourceSimilar)
         end
         --print(resource)
         --dialogReg:highlight(2)
@@ -335,6 +338,12 @@ function loopAttack(teamNum, pointA, pointB)
         if (loopAttackCount > 10) then
             --換方向
             loopAttackCount = 0
+            local executeTime = 0 + executeTimer:check()
+            if (executeTime > checkNeworkSeconds) then
+                -- 下次檢查時間
+                checkNeworkSeconds = checkNeworkSeconds + checkNeworkSeconds
+                checkNetwork()
+            end
             castleBeCenter()
             return 3
         end
@@ -380,8 +389,8 @@ function findBattle(teamNum)
     --8個方向
     local east = Location(500, 310)
     local west = Location(60, 310)
-    local north = Location(120, 100)
-    local south = Location(120, 310)
+    local north = Location(60, 50)
+    local south = Location(60, 350)
     local northEast = Location(500, 140)
     local southWest = Location(60, 310)
     local northWest = Location(60, 120)
@@ -547,7 +556,7 @@ end
 function dialog()
     --removePreference("cbValue")
     actions = { "採集", "打怪", "不動作" }
-    resourceActions = { "農田", "伐木", "採石", "治煉" }
+    resourceActions = { "農田", "伐木", "採石", "治煉","不限" }
     directions = { "東", "西", "北", "南", "東北", "西南", "西北", "東南" }
 
     dialogInit()
@@ -642,6 +651,7 @@ allTeams = preferenceGetNumber(keyingTeams, 4)
 
 --every 5 min check Be Recruited
 checkRecruitedSeconds = 60 * 5
+checkNeworkSeconds = 60 * 10
 --Team Action to Array
 teamActions[1] = actions1
 teamActions[2] = actions2
@@ -685,6 +695,7 @@ local excuteCount = 0
 
 -- 方向
 direction = 1
+unavailableCount = 1
 while (true) do
     if excuteCount > 5000 then
         print("執行" .. excuteCount .. "次結束!")
@@ -720,9 +731,13 @@ while (true) do
         wait(WaitSecond)
     else
         toast("查找可用閒置隊伍")
-        local unavailable = Pattern("allTeams" .. allTeams .. ".png"):similar(0.93)
+        local unavailable = Pattern("allTeams" .. allTeams .. ".png"):similar(0.95)
         if exists(unavailable) then
             toast("無可用閒置隊伍,等待" .. WaitSecond .. "秒!")
+            if unavailableCount % 10 == 0 then
+                castleBeCenter()
+            end
+            unavailableCount = unavailableCount + 1
             wait(WaitSecond)
         else
             if (existsClick("flag.png")) then
