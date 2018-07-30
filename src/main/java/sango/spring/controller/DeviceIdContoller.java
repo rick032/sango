@@ -1,18 +1,17 @@
 package sango.spring.controller;
 
-import java.io.ByteArrayInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.sql.Timestamp;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -25,14 +24,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.api.client.util.IOUtils;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.api.utils.SystemProperty.Environment.Value;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import com.google.appengine.tools.cloudstorage.ListItem;
+import com.google.appengine.tools.cloudstorage.ListOptions;
+import com.google.appengine.tools.cloudstorage.ListResult;
 import com.google.appengine.tools.cloudstorage.RetryParams;
+import com.google.common.io.ByteStreams;
 
 import sango.spring.model.Device;
 import sango.spring.model.DeviceLog;
@@ -96,7 +101,59 @@ public class DeviceIdContoller {
 		return "device";
 	}
 
-	private String INSERT_DEVICE = "insert into DEVICE(MACADDR,IMEI,deviceId,gameName,userName,enabled,startTime,endTime) values(''{0}'',''{1}'',''{2}'',''{3}'',''{4}'',{5},CURRENT_TIMESTAMP,''{6}'');";
+	@PostConstruct
+	public void init() {
+		Value location = SystemProperty.environment.value();
+		if (location == SystemProperty.Environment.Value.Production) {
+			readGS();
+		} else if (location == SystemProperty.Environment.Value.Development) {
+
+		}
+	}
+
+	private void readGS() {
+
+		ListResult list = null;
+		try {
+			list = gcsService.list(BUCKET_NAME, new ListOptions.Builder().setPrefix(PRFIX_DEVICE).build());
+
+			while (list.hasNext()) {
+				ListItem l = list.next();
+				String name = l.getName();
+				log.info("Item Name:" + name);
+				GcsFilename fileName = new GcsFilename(BUCKET_NAME, name);
+				GcsInputChannel readChannel = null;
+				BufferedReader reader = null;
+				try {
+					readChannel = gcsService.openPrefetchingReadChannel(fileName, 0, BUFFER_SIZE);
+					reader = new BufferedReader(Channels.newReader(readChannel, StandardCharsets.UTF_8.name()));
+					String line;
+					while ((line = reader.readLine()) != null) {
+						log.info("READ:" + line);
+					}
+					try (InputStream inputStream = Channels.newInputStream(readChannel)) {
+						Device device = IOUtils.deserialize(ByteStreams.toByteArray(inputStream));
+						if (deviceService.findByMacAddr(device.getMacAddr()) == null) {
+							deviceService.save(device);
+							log.info("SAVE:" + device.toString());
+						}
+					}
+				} finally {
+					if (reader != null) {
+						try {
+							reader.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	// for
 	// test:http://localhost:8080/check?macAddr=08:00:27:72:E8:A1&imei=359090150142188&deviceId=14dae9e9352e2959
@@ -111,17 +168,12 @@ public class DeviceIdContoller {
 		if (device2 == null) {
 			device.setStartTime(new Timestamp(System.currentTimeMillis()));
 			deviceService.save(device);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.sss");
-			String insertSQL = MessageFormat.format(INSERT_DEVICE,
-					new Object[] { device.getMacAddr(), device.getImei(), device.getDeviceID(), device.getGamename(),
-							device.getUsername(), String.valueOf(device.isEnabled()),
-							sdf.format(device.getEndTime()) });
-			log.info("@@@INSERT SQL:" + insertSQL);
+
 			try {
 
 				Value location = SystemProperty.environment.value();
 				if (location == SystemProperty.Environment.Value.Production) {
-					writeToGS(insertSQL);
+					writeToGS(device);
 				} else if (location == SystemProperty.Environment.Value.Development) {
 
 				}
@@ -148,35 +200,28 @@ public class DeviceIdContoller {
 	 */
 	private static final int BUFFER_SIZE = 2 * 1024 * 1024;
 	private static final String BUCKET_NAME = "staging.weighty-site-140903.appspot.com";
+	private final String PRFIX_DEVICE = "DEVICE_";
 
-	private void writeToGS(String sql) throws IOException {
+	private void writeToGS(Device device) throws IOException {
 		GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
-		GcsFilename fileName = new GcsFilename(BUCKET_NAME, "start.sql");
-		GcsOutputChannel outputChannel;
-		outputChannel = gcsService.createOrReplace(fileName, instance);
-		InputStream is = new ByteArrayInputStream(sql.getBytes(StandardCharsets.UTF_8));
-
-		copy(is, Channels.newOutputStream(outputChannel));
-
+		GcsFilename fileName = new GcsFilename(BUCKET_NAME, PRFIX_DEVICE + device.getMacAddr());
+		GcsOutputChannel outputChannel = gcsService.createOrReplace(fileName, instance);
+		// InputStream is = new ByteArrayInputStream(IOUtils.serialize(device));
+		// copy(is, Channels.newOutputStream(outputChannel));
+		outputChannel.write(ByteBuffer.wrap(IOUtils.serialize(device)));
+		outputChannel.close();
 	}
 
 	/**
 	 * Transfer the data from the inputStream to the outputStream. Then close both
 	 * streams.
+	 * 
+	 * private void copy(InputStream input, OutputStream output) throws IOException
+	 * { try { byte[] buffer = new byte[BUFFER_SIZE]; int bytesRead =
+	 * input.read(buffer); while (bytesRead != -1) { output.write(buffer, 0,
+	 * bytesRead); bytesRead = input.read(buffer); } } finally { input.close();
+	 * output.close(); } }
 	 */
-	private void copy(InputStream input, OutputStream output) throws IOException {
-		try {
-			byte[] buffer = new byte[BUFFER_SIZE];
-			int bytesRead = input.read(buffer);
-			while (bytesRead != -1) {
-				output.write(buffer, 0, bytesRead);
-				bytesRead = input.read(buffer);
-			}
-		} finally {
-			input.close();
-			output.close();
-		}
-	}
 
 	@RequestMapping(value = "/device/update", method = RequestMethod.POST)
 	public String update(Model model, Device device, HttpServletRequest request) {

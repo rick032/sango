@@ -1,5 +1,5 @@
 -- ========== Settings ================
-thisVersion = 20180722
+thisVersion = 20180728
 Settings:setCompareDimension(true, 1280)
 Settings:setScriptDimension(true, 720)
 Settings:set("MinSimilarity", 0.9)
@@ -16,7 +16,7 @@ beAttackedReg = Region(260, 30, 150, 30)
 chooseTeam = Region(80, 50, 120, 300)
 soldierPicReg = Region(98, 89, 174, 158)
 centerLocation = Location(340, 179)
-chooseTeamReg = Region(98,60,86,250)
+chooseTeamReg = Region(98, 60, 86, 250)
 hitBanditCount = 0
 collectionCount = 0
 teamActions = {}
@@ -35,7 +35,21 @@ file = io.open(fileName, "a")
 --file:write(",SIMSerial:" .. getSIMSerial())
 --file:write(",Device Id:" .. getDeviceID() .. "\n")
 --params = { imei = getIMEI(), macAddr = getMacAddr(), device = getDeviceID() }
-
+userName = ""
+local macList = {
+    "08:00:27:6F:02:B5", "08:00:27:D9:D4:C1", "08:00:27:BE:0B:EA", "08:00:27:A7:42:9C", "08:00:27:80:11:59", "08:00:27:97:2C:77", "08:00:27:B5:33:53", "08:00:27:BE:ED:C6", "08:00:27:46:1A:F3"
+}
+local nameList = {
+    "若嚴",
+    "孤苟寒",
+    "孤玖寒",
+    "孤玖寒2",
+    "帆苟禮",
+    "帆苟禮2",
+    "咒怨馬",
+    "富士山",
+    "BALANCE"
+}
 local varResult = false
 function doHttpGet()
     --varResult = httpGet("http://localhost:8080/check?macAddr=" .. getMacAddr().."&imei=" .. getIMEI() .. "&deviceId=" .. getDeviceID())
@@ -43,6 +57,15 @@ function doHttpGet()
 end
 
 function validMac()
+
+    for k, v in pairs(macList) do
+        if getMacAddr() == v then
+            userName = nameList[k]
+            break
+        end
+    end
+
+
     while (not pcall(doHttpGet)) do
         toast("Exception!! valid again!")
     end
@@ -290,6 +313,8 @@ function loopAttack(teamNum, pointA, pointB)
                     toast("使用行軍令")
                     --existsClick("attack.png")
                     file:write("使用行軍令\n")
+                    local centerReg = Region(318, 162, 80, 60)
+                    click(centerReg)
                     if teamActions[teamNum] == 1 then
                         existsClick("collection.png")
                     elseif teamActions[teamNum] == 2 then
@@ -311,7 +336,7 @@ function loopAttack(teamNum, pointA, pointB)
         local team = chooseTeamReg:exists("team" .. teamNum .. ".png")
         --toast(findTeam:getX()..","..findTeam:getY()..","..findTeam:getH()..","..findTeam:getW())
         --if (existsClick(team)) then
-        if (team~=nil) then
+        if (team ~= nil) then
             click(team)
             toast("team" .. teamNum)
             if teamActions[teamNum] == 2 and exists("Departure.png") then
@@ -556,7 +581,7 @@ end
 function dialog()
     --removePreference("cbValue")
     actions = { "採集", "打怪", "不動作" }
-    resourceActions = { "農田", "伐木", "採石", "治煉","不限" }
+    resourceActions = { "農田", "伐木", "採石", "治煉", "不限" }
     directions = { "東", "西", "北", "南", "東北", "西南", "西北", "東南" }
 
     dialogInit()
@@ -623,7 +648,7 @@ function dialog()
     --等待秒數
     --addTextView("等待秒數")
     --addEditText("inputWaitSec", "10")
-    dialogShow("請輸入以下資訊後點選OK。ver:" .. thisVersion)
+    dialogShow("請輸入以下資訊後點選OK。 ver:" .. thisVersion)
 end
 
 --------------------------- START
@@ -642,6 +667,9 @@ executeTimer = Timer()
 dialog()
 --驗MAC
 validMac()
+if userName ~= "" then
+    toast("Hello " .. userName)
+end
 BanditLevel = ""
 WaitSecond = preferenceGetNumber(inputWaitSec, 10)
 --隊伍有幾隊

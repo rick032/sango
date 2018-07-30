@@ -41,7 +41,7 @@ public class DeviceDaoImp implements DeviceDao, Serializable {
 		}
 		return session;
 	}
-	
+
 	public Device findByMacAddr(String macAddr) {
 		CriteriaBuilder builder = getSession().getCriteriaBuilder();
 		CriteriaQuery<Device> criteria = builder.createQuery(Device.class);
