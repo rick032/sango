@@ -31,16 +31,16 @@
 		<table class="table" id='downloadTable'>
 			<thead>
 				<th scope="col">說明文件</th>
-				<th scope="col">操作助手0725</th>
+				<th scope="col">操作助手0804</th>
 				<th scope="col">版本:20180722</th>
-				<th scope="col">版本:20180725</th>
+				<th scope="col">版本:20180804</th>
 			</thead>
 			<tbody>				
 				<tr>
 					<td scope="row"><a href="https://drive.google.com/open?id=1SDZ_Y9YCfXRnSJVm0PnHIY3HuJgkmag-" target="_blank">說明文件</a></td>
 					<td scope="row"><a href="https://drive.google.com/open?id=18b51ADVaZaNQivvmf1a5E3353ndijK0B" target="_blank">操作助手3.7z</a></td>										
-					<td scope="row"><a href="https://drive.google.com/open?id=14sbnNkb0TxXEAy7lXid8FepEdpM-VCur" target="_blank">sango_0722.zip</a></td>
-					<td scope="row"><a href="https://drive.google.com/open?id=18vmRmoYxJyx-MD0RS2vXAcxha5-RHjwW" target="_blank">sango_0725.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=14sbnNkb0TxXEAy7lXid8FepEdpM-VCur" target="_blank">sango_0722.zip</a></td>					
+					<td scope="row"><a href="https://drive.google.com/open?id=1COhgQ8P_9eDRlkNcc6IsbXfV9aLmShjw" target="_blank">sango_0804.zip</a></td>
 				</tr>
 				<tr>
 					<td scope="row">					
@@ -51,7 +51,7 @@
 					<td scope="row">					
 					<ul>
 						<li>操作助手設定每900秒執行/停止</li>
-						<li>配合0725版</li>
+						<li>配合0804版</li>
 					</ul>
 					</td>					
 					<td scope="row">					
@@ -70,7 +70,8 @@
 					</td>
 					<td scope="row">					
 					<ul>
-						<li>更改認證方式</li>						
+						<li>更改認證方式</li>
+						<li>修改等待時間為3秒</li>								
 					</ul>
 					</td>					
 				</tr>				

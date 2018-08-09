@@ -1,8 +1,12 @@
 package sango.spring.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
@@ -106,8 +110,19 @@ public class DeviceIdContoller {
 		Value location = SystemProperty.environment.value();
 		if (location == SystemProperty.Environment.Value.Production) {
 			readGS();
-		} else if (location == SystemProperty.Environment.Value.Development) {
+		} else {
+			readGS_Dev();
+		}
+	}
 
+	private void readGS_Dev() {
+		File initialFile = new File("src/main/resources/DEVICE_08_00_27_46_1A_FF");
+		try {
+
+			Device device = IOUtils.deserialize(ByteStreams.toByteArray(new FileInputStream(initialFile)));
+			log.info(device.getGamename());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -126,11 +141,11 @@ public class DeviceIdContoller {
 				BufferedReader reader = null;
 				try {
 					readChannel = gcsService.openPrefetchingReadChannel(fileName, 0, BUFFER_SIZE);
-					reader = new BufferedReader(Channels.newReader(readChannel, StandardCharsets.UTF_8.name()));
-					String line;
-					while ((line = reader.readLine()) != null) {
-						log.info("READ:" + line);
-					}
+					/*
+					 * reader = new BufferedReader(Channels.newReader(readChannel,
+					 * StandardCharsets.ISO_8859_1.name())); String line; while ((line =
+					 * reader.readLine()) != null) { log.info("READ:" + line); }
+					 */
 					try (InputStream inputStream = Channels.newInputStream(readChannel)) {
 						Device device = IOUtils.deserialize(ByteStreams.toByteArray(inputStream));
 						if (deviceService.findByMacAddr(device.getMacAddr()) == null) {
@@ -139,6 +154,9 @@ public class DeviceIdContoller {
 						}
 					}
 				} finally {
+					if (readChannel != null) {
+						readChannel.close();
+					}
 					if (reader != null) {
 						try {
 							reader.close();
