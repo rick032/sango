@@ -33,14 +33,16 @@
 				<th scope="col">說明文件</th>
 				<th scope="col">操作助手0804</th>
 				<th scope="col">版本:20180722</th>
-				<th scope="col">版本:20180804</th>
+				<th scope="col">版本:20180823</th>
+				<th scope="col">版本:20180909</th>
 			</thead>
 			<tbody>				
 				<tr>
 					<td scope="row"><a href="https://drive.google.com/open?id=1SDZ_Y9YCfXRnSJVm0PnHIY3HuJgkmag-" target="_blank">說明文件</a></td>
 					<td scope="row"><a href="https://drive.google.com/open?id=18b51ADVaZaNQivvmf1a5E3353ndijK0B" target="_blank">操作助手3.7z</a></td>										
-					<td scope="row"><a href="https://drive.google.com/open?id=14sbnNkb0TxXEAy7lXid8FepEdpM-VCur" target="_blank">sango_0722.zip</a></td>					
-					<td scope="row"><a href="https://drive.google.com/open?id=1COhgQ8P_9eDRlkNcc6IsbXfV9aLmShjw" target="_blank">sango_0804.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=14sbnNkb0TxXEAy7lXid8FepEdpM-VCur" target="_blank">sango_0722.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1e-Vvo-QNSCHVU0qyd8SSxVADOxnYUwfm" target="_blank">sango_0823.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=1WbEkPwonXiCm8TFVGospyR2R9ZuGyci6" target="_blank">sango_0909.zip</a></td>
 				</tr>
 				<tr>
 					<td scope="row">					
@@ -64,14 +66,23 @@
 						<li>增加每10分鐘檢查網路斷線</li>
 						<li>增加採集資源選項增加不限</li>
 						<li>增加每次10次找不到可用隊伍時會回主城</li>
-						<li>fix bug</li>
+						<li>更改認證方式</li>
+						<li>修改等待時間為3秒</li>
 						<li>更新1.6.0版</li>				
 					</ul>
 					</td>
 					<td scope="row">					
 					<ul>
-						<li>更改認證方式</li>
-						<li>修改等待時間為3秒</li>								
+						<li>更新1.8.0版</li>
+						<li>修改兵力檢查位置</li>
+						<li>修改可輸入等待時間</li>
+						<li>刪除自動設定採礦等級</li>
+						<li>增加自動執行內政</li>									
+					</ul>
+					<td scope="row">					
+					<ul>						
+						<li>修正被打礦無法召回</li>
+						<li>增加可輸入多久時間檢查募兵、內政</li>																									
 					</ul>
 					</td>					
 				</tr>				
