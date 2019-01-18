@@ -35,14 +35,15 @@
 				<th scope="col">版本:20180722</th>
 				<th scope="col">版本:20180823</th>
 				<th scope="col">版本:20180909</th>
+				<th scope="col">版本:20181109</th>
 			</thead>
 			<tbody>				
 				<tr>
-					<td scope="row"><a href="https://drive.google.com/open?id=1SDZ_Y9YCfXRnSJVm0PnHIY3HuJgkmag-" target="_blank">說明文件</a></td>
-					<td scope="row"><a href="https://drive.google.com/open?id=18b51ADVaZaNQivvmf1a5E3353ndijK0B" target="_blank">操作助手3.7z</a></td>										
+					<td scope="row"><a href="https://drive.google.com/open?id=1SDZ_Y9YCfXRnSJVm0PnHIY3HuJgkmag-" target="_blank">說明文件</a></td>															
 					<td scope="row"><a href="https://drive.google.com/open?id=14sbnNkb0TxXEAy7lXid8FepEdpM-VCur" target="_blank">sango_0722.zip</a></td>
 					<td scope="row"><a href="https://drive.google.com/open?id=1e-Vvo-QNSCHVU0qyd8SSxVADOxnYUwfm" target="_blank">sango_0823.zip</a></td>
 					<td scope="row"><a href="https://drive.google.com/open?id=1WbEkPwonXiCm8TFVGospyR2R9ZuGyci6" target="_blank">sango_0909.zip</a></td>
+					<td scope="row"><a href="https://drive.google.com/open?id=15wAsQiwRA5l5CYfEyWVHpAaQK9Fjl1CQ" target="_blank">sango_1109.zip</a></td>
 				</tr>
 				<tr>
 					<td scope="row">					
@@ -50,11 +51,6 @@
 						<li>說明文件</li>
 					</ul>
 					</td>
-					<td scope="row">					
-					<ul>
-						<li>操作助手設定每900秒執行/停止</li>
-						<li>配合0804版</li>
-					</ul>
 					</td>					
 					<td scope="row">					
 					<ul>
@@ -84,7 +80,12 @@
 						<li>修正被打礦無法召回</li>
 						<li>增加可輸入多久時間檢查募兵、內政</li>																									
 					</ul>
-					</td>					
+					</td>
+					<td scope="row">					
+					<ul>						
+						<li>更新1.9.0版</li>																															
+					</ul>
+					</td>				
 				</tr>				
 			</tbody>
 		</table>
